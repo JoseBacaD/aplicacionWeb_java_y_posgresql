@@ -1,0 +1,521 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+
+            <ui:define name="content">
+               <p:ajaxStatus  onstart="$('#processing').modal('open');" onsuccess="$('#processing').modal('close');" />
+  
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{labelItemPrintBean.onPageLoad}"/>
+                 </f:metadata>
+                
+                
+                 <style>
+                         .hide-label{ display:none;}
+                 </style>
+                
+                <div class="card">
+                    <div class="card-content">
+                        
+                        <h5 style="margin-top: 0px"><i class="fas fa-tags"/> Etiquetas</h5>
+                        
+                                <div class="card-tabs">
+                                    <div class="row">
+                                        <div class="col s12">
+                                  <ul class="tabs">
+                                     
+                                      <li class="tab"><a class="active"  href="#pr">Impresión</a></li>
+                                     <li class="tab"><a   href="#se">Búsqueda</a></li>
+                                    
+                                  </ul>
+                                   </div>
+                                <div>
+                                   
+                                    
+                                     <div id="pr">
+                                         
+                                         <h:form id="codeSearchForm">
+                                             <h:panelGroup id="codeSearchPanel"> 
+                                                 <p:focus context="codeSearchPanel"/>
+                                             <div class="row">       
+                                     <div class="col s12 m5 l5 input-field" >
+                                            <p:inputText
+                                                
+                                                id="inputTextCode"
+                                                required="true"
+                                                value="#{labelItemPrintBean.searchStdCode}"
+                                                onkeypress="if (event.keyCode === 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};" 
+                                                >
+                                                <p:ajax event="change"
+                                                        listener="#{labelItemPrintBean.callSearchItem}"
+                                                        update="printForm codeSearchForm"
+                                                        oncomplete="updateInputs();"
+                                                        />
+                                            </p:inputText>
+                                            <label  for="inputTextCode" >#{bundle['procsale.field.itemcode']}</label>   
+                                            
+                                        </div>
+                                                 
+                                                 <div class="col s16 m2 l2 input-field" >
+                                                     <p:commandLink id="printLink" 
+                                                                    styleClass="">
+                                                         
+                                                         
+                                                         <p:ajax
+                                                                listener="#{labelItemPrintBean.preparePrintList}"                     
+                                                                oncomplete="popupWindow('print-item-label.xhtml','Etiquetas');
+                                                                    $(function(){PrimeFaces.focus('codeSearchForm:inputTextCode');});"/>
+                                            <i class="fas fa-print fa-2x light-blue-text text-darken-4" style="margin-top: 5px"></i>
+                                            <p:tooltip for="printLink" value="Imprimir etiquetas" position="top"/>
+                                        </p:commandLink>
+                                                   
+                                                 </div>
+                                                 
+                                             <div class="col s16 m2 l2 input-field" style="margin-top: 18px;" >
+                                                     <p:commandLink styleClass=""
+                                                                    style="text-decoration: none;"
+                                                                    id="btnSendToPrint"
+                                                                    onsuccess="$('#warningModal').modal('open');">
+                                                                    
+                                                         <i class="icofont-ui-delete icofont-2x red-text text-darken-1"></i>
+                                          <p:tooltip for="btnSendToPrint" value="Vaciar lista de impresión" position="top"/>
+                                        </p:commandLink>
+                                                   
+                                                 </div>
+                                                 
+                                                 
+                                                 <div class="col s6 m3 l3 input-field" >
+                                                  <h6>
+                                                      Etiquetas: #{labelItemPrintBean.totalTags}
+                                                     </h6>
+                                                 </div>
+                                                 </div> 
+                                                 
+                                                 </h:panelGroup>
+                                         </h:form>
+                                         
+                                                <h:form id="printForm">
+                  
+                                               
+                                    <div class="row" >
+                                        <div class="col s12">
+                                           
+
+
+                                                         <p:dataTable id="products" var="product"
+                                                                      value="#{labelItemPrintBean.printList}"
+                                                                      rowKey="#{product.idItem}"
+                                                                      selection="#{labelItemPrintBean.rowDelete}"
+                                                                      selectionMode="single"
+                                                                      emptyMessage="#{bundle['resulttable.nomatchfound']}"
+                                                                      stripedRows="true">   
+                                                <p:ajax event="rowSelect" listener="#{labelItemPrintBean.onRowSelect}" 
+                                                        update="printForm codeSearchForm"
+                                                        oncomplete="updateInputs(); 
+                                                        "
+                                                        />
+                                                
+                                               
+                                                <p:column headerText="Código">                                                   
+                                                    <h:outputText value="#{product.standardCodeItem}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Descripción">                                                   
+                                                    <h:outputText value="#{product.shortDescItem}" />
+                                                </p:column>
+                                                
+                                                  <p:column headerText="Precio venta">                                                 
+                                                    <h:outputText value="#{product.priceSale}" />
+                                                </p:column>
+                                     
+                                            </p:dataTable>
+                                        </div>
+                                         </div>
+                                        
+                               
+                        
+                      
+
+
+                </h:form>
+                                         
+                                        
+                                     </div>
+                                     <div id="se">
+                                         
+                   <h:form id="searchForm">
+                   <h:panelGroup id="searchPanel"> 
+                     <p:focus context="searchPanel"/>
+                       
+                    <div class="row" style="margin-bottom: 0px;" >
+                        <div class="col s12">
+                            <div>
+                                <div class="card-content" style="padding-bottom: 0px;">
+                                  
+
+                                    <div class="row">
+                                          <div class="col s12 m6 l6 offset-l3 offset-m3 input-field">
+                                            <h6>Buscar por:</h6>
+                                            <h:selectOneMenu value="#{labelItemPrintBean.filterValue}">    
+                <f:selectItem itemLabel="Todo" itemValue="0"/>  
+                <f:selectItem itemLabel="Descripción" itemValue="1"/>
+                <f:selectItem itemLabel="Código" itemValue="2"/>
+                <f:selectItem itemLabel="Departamento" itemValue="4"/>
+                <f:selectItem itemLabel="Proveedor" itemValue="5"/>
+                <f:selectItem itemLabel="Marca" itemValue="6"/>
+                <f:selectItem itemLabel="Ubicación" itemValue="7"/>
+                <p:ajax update="@form"
+                        event="change" listener="#{labelItemPrintBean.setLabels}"
+                        oncomplete="updateInputs(); initSelect();"/>  
+            </h:selectOneMenu>  
+             <label  for="filter6" ></label>
+           
+                                        </div>
+                                    </div>
+                                        
+                                    <div class="row">
+                                        <div class="col s12 m6 l6 offset-l3 offset-m3  input-field">
+                                            <p:inputText
+                                                rendered="#{labelItemPrintBean.filterValue == '1'}"
+                                                id="filter1"
+                                                required="true"
+                                                converter="EmptyToNullConverter"
+                                                value = "#{labelItemPrintBean.searchItem.descItem}"
+                                                requiredMessage="#{bundle.validationmessagereguired}">
+                                                
+                                            </p:inputText>
+                                            <h:messages class="red-text" for="filter1"/>
+                                            <label class="#{labelItemPrintBean.hideDesc}" for="filter1" >Ingresar descripción</label> 
+
+                                         
+
+                                            
+                                            <p:inputText
+
+                                                id="filter2"
+                                                rendered="#{labelItemPrintBean.filterValue == '2'}"
+                                                required="true"
+                                                value="#{labelItemPrintBean.searchItem.standardCodeItem}"
+                                                requiredMessage="#{bundle.validationmessagereguired}"
+                                                converterMessage="#{bundle.validationmessagenumeric}"/>
+                                            <h:messages class="red-text" for="filter2"/>
+                                            <label class="#{labelItemPrintBean.hideCode}" for="filter2" >Ingresar Código</label> 
+                                        
+                                            
+                                            <p:inputText
+
+                                                id="filter3"
+                                                required="true"
+                                                rendered="#{labelItemPrintBean.filterValue == '3'}"
+                                                value="#{labelItemPrintBean.searchItem.itemLocation}"
+                                                requiredMessage="#{bundle.validationmessagereguired}"/>
+                                            <h:messages class="red-text" for="filter3"/>
+                                          
+                                            
+                                            <h:selectOneMenu id="filter4" value="#{labelItemPrintBean.searchItem.idDepartment.idDepartment}"
+                                                             rendered="#{labelItemPrintBean.filterValue == '4'}"
+                                                             required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar departamento" itemValue="" />
+                                              <f:selectItems  value="#{labelItemPrintBean.depDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idDepartment}"/>
+                                        </h:selectOneMenu>
+                                            <h:messages class="red-text" for="filter4"/>
+                                            
+                                            <h:selectOneMenu id="provider" value="#{labelItemPrintBean.searchItem.idProvider.idProvider}"
+                                                             rendered="#{labelItemPrintBean.filterValue == '5'}"
+                                                             required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar proveedor" itemValue="" />
+                                                <f:selectItems  value="#{labelItemPrintBean.provDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idProvider}"/>
+                                        </h:selectOneMenu>
+                                            <h:messages class="red-text" for="provider"/>
+                                            
+                                            <h:selectOneMenu id="brand" value="#{labelItemPrintBean.searchItem.idBrand.idBrand}"
+                                                             rendered="#{labelItemPrintBean.filterValue == '6'}"
+                                                             required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar marca" itemValue="" />
+                                                <f:selectItems  value="#{labelItemPrintBean.brandDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idBrand}"/>
+                                        </h:selectOneMenu>
+                                            <h:messages class="red-text" for="brand"/>
+                                            
+                                            <h:selectOneMenu id="location" value="#{labelItemPrintBean.searchItem.idLocation.idLocation}"
+                                                             rendered="#{labelItemPrintBean.filterValue == '7'}"
+                                                             required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar ubicación" itemValue="" />
+                                                <f:selectItems  value="#{labelItemPrintBean.locationDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idLocation}"/>
+                                        </h:selectOneMenu>
+                                            <h:messages class="red-text" for="location"/>
+                                           
+                                        </div>
+                                        
+                                            
+                                            
+                                        </div>
+                                   
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-l4 offset-m4 " >                        
+                                            <p:commandLink action="#{labelItemPrintBean.populateTable}"
+                                                           styleClass="btn waves-effect waves-light"
+                                                           style="width: 100%;text-decoration: none;
+                                                                  color: white;"
+                                                           update="tableForm searchForm "
+
+                                                           oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                                           >
+
+                                                <i class="icofont-search"></i> #{bundle['search.btn.search']}
+                                            </p:commandLink> 
+                                        </div>
+
+
+
+                                    </div>
+                                    
+                                    <div class="row" style="margin-bottom: 0px">
+                                         <div class="col s16 m6 l6 input-field" style="margin-bottom: 0px" >
+                                                     <p:commandLink styleClass="light-blue-text text-darken-1"
+                                                                    style="text-decoration: none"
+                                                                    id="btnSendToPrint"
+                                                                    
+                                                                     >
+                                                         <p:ajax
+                                                                update="printForm codeSearchForm"
+                                                                listener="#{labelItemPrintBean.addCurrentPageToList}"                     
+                                                                oncomplete="$(function(){PrimeFaces.focus('codeSearchForm:inputTextCode');});"/>
+                                                         
+                                                         
+                                                         AGREGAR A IMPRESIÓN
+                                                        
+                                          <p:tooltip for="btnSendToPrint" value="Agregar página actual a lista de impresión" position="top"/>
+                                        </p:commandLink>
+                                                   
+                                             
+                                             
+
+                                                 </div>
+                                    </div>
+                                      
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                   </h:panelGroup>
+                </h:form>
+          
+                                                         
+          <h:form id="tableForm"  >
+          
+            <div class="row" style="margin-bottom: 8px">
+                                        <div class="col s12">
+                                          <p:dataTable id="resultTable" 
+
+
+                                                       value="#{labelItemPrintBean.objLazyList}"
+                                                         var="row"
+                                                         emptyMessage="#{bundle['resulttable.nomatchfound']}"
+                                                         tableStyle="table-layout:auto;"
+                                                         reflow="true"
+                                                         paginator="true" rows="20"
+                                                         lazy="true"
+                                                         selectionMode="single"
+                                                         selection="#{labelItemPrintBean.rowSelected}"
+                                                         rowKey="#{row.idItem}"
+                                                         stripedRows="true"
+                                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                                         rowsPerPageTemplate="20,50,100,{ShowAll|'Todos'}"
+                                                         paginatorTemplate="{CurrentPageReport}
+                                                         {FirstPageLink}
+                                                         {PreviousPageLink}
+                                                         {PageLinks}
+                                                         {NextPageLink}
+                                                         {LastPageLink}
+                                                         {RowsPerPageDropdown}"
+                                                         >       
+                                              <p:ajax event="rowSelect" listener="#{labelItemPrintBean.searchOnRowSelect}" 
+                                                        update="printForm codeSearchForm"
+                                                        oncomplete="updateInputs();"
+                                                        />
+
+
+                                                <p:column headerText="#{bundle['item.columnname.stancode']}">      
+                                                    <h:outputText value="#{row.standardCodeItem}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="#{bundle['item.columnname.descitem']}">                                                   
+                                                    <h:outputText value="#{row.descItem}" />
+                                                </p:column>
+                                             
+                                                
+                                                <p:column headerText="Precio venta">                                                 
+                                                    <h:outputText value="#{row.priceSale}" />
+                                                </p:column>
+                                                
+                                                  <p:column headerText="Departamento">                                                  
+                                                    <h:outputText value="#{row.idDepartment.descDepartment}" />
+                                                </p:column>
+
+                                                <p:column headerText="Ubicación">                                                    
+                                                    <h:outputText value="#{row.itemLocation}" />
+                                                </p:column>
+                                              
+                                              <p:column headerText="Proveedor">                                                    
+                                                  <h:outputText value="#{row.idProvider.nameProvider}" />
+                                                </p:column>
+                                            </p:dataTable>
+                                        </div>
+                                    </div>
+                </h:form>
+                                         
+                                     </div>
+                                </div>
+                        
+                        </div>
+                        </div>
+                        </div>
+                </div>
+                
+                      <div id="warningModal" class="modal">
+                    <div class="modal-content center-align black-text ">
+
+                        <h5>¿Vaciar lista de impresión?</h5>
+                        <h6></h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row" style="width: 99%; margin-left: 2px">
+
+                            <div class="col s12 m5 l5  offset-l1 offset-m1 center-align">
+                                <h:form  id="warningForm">
+                                    <p:commandLink style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                                  action="#{labelItemPrintBean.emptyPrintList}"
+                                                   styleClass="btn waves-effect waves-light"
+                                                   onsuccess="$('#warningModal').modal('close');"
+                                                   update="printForm codeSearchForm"
+
+
+                                                   >
+
+                                        <i class="icofont-check-alt"></i>    Aceptar
+                                    </p:commandLink>
+                                </h:form>
+                            </div>
+                            <div class="col s12 m5 l5 center-align">
+                              <p:commandLink
+                                        style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                       
+                                        styleClass="modal-action modal-close
+                                        waves-effect waves-light 
+                                        btn"
+                                        oncomplete="updateInputs();
+                                        $(function(){PrimeFaces.focus('codeSearchForm:inputTextCode');});"
+                                       >
+                                        <i class="icofont-close-line"/>
+                                        
+                                        Cancelar
+                                    </p:commandLink>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+               
+               
+               
+                <script>
+                    initTabs();
+                    function initTabs(){
+                      $(document).ready(function(){
+                         $('.tabs').tabs();
+                        });
+                    }
+                    
+                    function popupWindow(url, title) {      
+                        window.open(url , title);        
+                    }    
+                    
+                    
+                 initProcessing();
+    function initProcessing(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#processing').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+           
+        
+            
+}   
+
+    warningModal();
+    function warningModal(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#warningModal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+        }
+        
+        
+        function downloadTicket(uri, name) 
+{
+    var link = document.createElement("a");
+    // If you don't know the name or want to use
+    // the webserver default set name = ''
+    link.setAttribute('download', name);
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+                </script>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

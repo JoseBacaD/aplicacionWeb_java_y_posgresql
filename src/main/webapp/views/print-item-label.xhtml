@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="/css/materialize.css"/>
+         <h:outputStylesheet name="/css/commadLinkCustom.css"/>
+        <h:outputStylesheet name="/css/custom-materialize.css"/>
+        <h:outputStylesheet name="/css/materialize.css"/>
+        <h:outputStylesheet name="/css/fontawesome.min.css"/>
+        <h:outputStylesheet name="/css/all.min.css"/>
+        <h:outputStylesheet name="/css/regular.min.css"/>
+        <h:outputStylesheet name="/css/solid.min.css"/>
+         <h:outputStylesheet name="/css/icofont.min.css"/> 
+        <h:outputStylesheet name="/css/svg-with-js.min.css"/>
+        <h:outputScript name="/js/materialize.js"/>
+        <h:outputScript name="/js/JsBarcode.all.min.js"/>
+       
+        <h:outputStylesheet name="/css/custom-primefaces.css"/>
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     
+        
+          <style type="text/css">
+
+    #printable { display: none; }
+
+    @media print
+    {
+        
+        #non-printable { display: none; }
+        #printable { display: block; }
+        body,html {color: black; height: 99%; page-break-inside: avoid}   
+    }
+    
+    
+    </style>
+    
+    </h:head>
+    <h:body>
+        <div id="non-printable">
+            <input type="button" onclick="printDiv('printableArea')" value="Imprimir ticket" style="display: none;" />
+            <label id="copies" style="display: none;">#{labelItemPrintBean.appConfig.printCopies}</label>
+<!--                <label id="barcodeValue" >cons0001</label>-->
+                <label id="showText" style="display: none;">true</label> 
+                <label id="barcodeType" style="display: none;">code128</label>
+                    
+             </div>
+                <h:panelGroup id="ticketPanel">
+    <div id="printableArea"  >
+        <div id="repeatThis" style="font-size: 12px" >       
+            
+            <ui:repeat var="label" value="#{labelItemPrintBean.splittedPrintList}" >
+                <div class="row" style="margin-bottom: 0px;">
+                    <div class="col s12 center-align">
+                        <p  style="margin-bottom: 0px; margin-top: 0px; font-weight:500">#{label.shortDescItem}</p>
+               </div>
+                    <div class="col s9 center-align">
+               <h5 style="margin-bottom: 0px;  margin-top: 0px; line-height: 1;">
+                   $#{label.priceSale}
+                 
+               </h5> 
+                        <p style="font-size: 8px; margin: 0px;">
+                            Loc: #{label.idLocation.nameLocation}
+                        </p>   
+                        
+               </div>
+               </div>
+               
+               
+                <div class="row" style="margin-bottom: 0px">
+                    <div class="col s10 center-align" style="padding-left: 0px;">
+                                    
+                            <svg id="a#{label.idItem}"></svg>
+                    </div>
+               
+            </div>
+                
+                <div class="row" style="margin-bottom: #{labelItemPrintBean.appConfig.gapLabelAdjustment}px;">
+             
+                </div>
+                
+                <script>
+                      function generateBarcode(barcodeValue ){
+//			var barcodeValue = document.getElementById("barcodeValue").textContent;
+			var barcodeType = document.getElementById("barcodeType").textContent;
+			var showText = document.getElementById("showText").textContent;		   
+			JsBarcode("#a#{label.idItem}", barcodeValue, {
+				format: barcodeType,
+				displayValue: showText,
+//				lineColor: "#0aa",
+				width:1.3,
+				height:10,	
+				fontSize: 8					
+			});		
+		}
+                    
+                    generateBarcode('#{label.standardCodeItem}');
+                    </script>
+                
+               
+              </ui:repeat>
+            
+            <!--imprime última etiqueta de la lista-->
+            <div class="row" style="margin-bottom: 0px;">
+                    <div class="col s12 center-align">
+                        <p  style="margin-bottom: 0px; margin-top: 0px; font-weight:500">#{labelItemPrintBean.lastPrintableItem.shortDescItem}</p>
+               </div>
+                    <div class="col s9 center-align">
+               <h5 style="margin-bottom: 0px;  margin-top: 0px; line-height: 1;">
+                   $#{labelItemPrintBean.lastPrintableItem.priceSale}
+                 
+               </h5> 
+                        <p style="font-size: 8px; margin: 0px;">
+                            Loc: #{labelItemPrintBean.lastPrintableItem.idLocation.nameLocation}
+                        </p>   
+                        
+               </div>
+               </div>
+                
+            <div class="row" style="margin-bottom: 0px">
+                    <div class="col s10 center-align" style="padding-left: 0px;">
+                                    
+                            <svg id="lastItem"></svg>
+                    </div>
+               
+            </div>
+            
+           </div>
+        <div class="row grey-text text-lighten-5 "  style="margin: 0px; font-size: 1px; margin-bottom: #{labelItemPrintBean.appConfig.printLabelAdjustment}px;">
+             
+                </div>
+        <p class="grey-text text-lighten-5" style="margin: 0px; height: 0px">'</p>
+    </div>
+    </h:panelGroup>
+                
+        
+        
+        
+        
+        
+        
+        
+                
+               <script type="text/javascript">
+                 window.onload = printDiv('printableArea');
+                    
+                    function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+ 
+}
+// 
+// window.onafterprint = window.close;
+window.onafterprint = function(){
+     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+    
+    }else{
+     
+      open(location, '_self').close();
+    }
+   
+};
+
+var copies = document.getElementById("copies").textContent;
+window.onload = genCopies();
+
+
+    function genCopies(){
+        for (var i = 1; copies > i; i++) {  
+         var original = document.getElementById('repeatThis');
+    var clone = original.cloneNode(true); // "deep" clone
+   original.parentNode.appendChild(clone);
+        }
+
+    }
+    
+    
+     function generateLastBarcode(barcodeValue ){
+//			var barcodeValue = document.getElementById("barcodeValue").textContent;
+			var barcodeType = document.getElementById("barcodeType").textContent;
+			var showText = document.getElementById("showText").textContent;		   
+			JsBarcode("#lastItem", barcodeValue, {
+				format: barcodeType,
+				displayValue: showText,
+//				lineColor: "#0aa",
+				width:1.3,
+				height:10,	
+				fontSize: 8					
+			});		
+		}
+                    generateLastBarcode('#{labelItemPrintBean.lastPrintableItem.standardCodeItem}');
+                </script>
+    </h:body>
+</html>
+

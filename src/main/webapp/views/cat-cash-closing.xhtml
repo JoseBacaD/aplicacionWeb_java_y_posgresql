@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+
+            <ui:define name="content">
+                    <f:metadata>
+                         <f:event type="preRenderView" listener="#{cashClosingBean.onPageLoad}"/>
+                    </f:metadata>
+                
+                  
+                <p:ajaxStatus  onstart="$('#processing').modal('open');" onsuccess="$('#processing').modal('close');" />
+
+
+                <h:form id="searchForm">
+                    <h:panelGroup id="panelSearch">
+                        <p:focus context="panelSearch" />
+                    <div class="row" style="margin-bottom: 0px;" >
+                        <div class="col s12">
+                            <div class="card hoverable " style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <h5 style="margin-top: 0px"><i class="icofont-papers"/> Reporte corte caja</h5>
+
+                                    <div class="row">
+                                              <div class="col s12 m4 l3 input-field">
+                                                  <p:inputMask id="field3"
+                                                               mask="9999/99/99"
+                                                               styleClass="datepicker"
+                                                               value="#{cashClosingBean.dateIniValue}" 
+                                                               converterMessage="Fecha inválida"
+                                                               converter="EmptyToNullConverter">
+                                                      <f:convertDateTime pattern="yyyy/MM/dd" />
+                                                    </p:inputMask>
+                                          <p:watermark  value="AAAA/MM/DD" for="field3" />
+                                          <h:messages class="red-text" for="field3"/>
+                                          <label for="field3">Fecha venta inicio</label>
+                                        </div>
+                                        
+                                        <div class="col s12 m4 l3 input-field">
+                                           <p:inputMask id="field4"
+                                                        mask="9999/99/99"
+                                                        styleClass="datepicker"
+                                                        value="#{cashClosingBean.dateEndValue}" 
+                                                        converterMessage="Fecha inválida"
+                                                        converter="EmptyToNullConverter"
+                                                        >
+                                                        
+                                               <f:convertDateTime pattern="yyyy/MM/dd" />
+                                         </p:inputMask>
+                                          <p:watermark  value="AAAA/MM/DD" for="field4" />
+                                          <h:messages class="red-text" for="field4"/>
+                                          <label for="field7">Fecha venta final</label>
+                                        </div>
+                                        
+                                         
+                                        </div>
+                                   
+                                    
+                                    
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-l4 offset-m4 " >                        
+                                            <p:commandLink action="#{cashClosingBean.populateTable}"
+                                                           styleClass="btn waves-effect waves-light"
+                                                           style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                           update="tableForm"
+                                                           
+                                                           ajax="true"
+                                                           oncomplete="updateInputs();
+                                                                       initDatepicker();
+                                                                       initSelect();"
+                                                                       >
+
+                                                <i class="icofont-search"></i> #{bundle['search.btn.search']}
+                                            </p:commandLink> 
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                 </h:panelGroup>
+                </h:form>
+
+
+                <h:form id="tableForm">
+                    <div class="row" style="margin-bottom: 0px;">
+                        <div class="col s12">
+                            <div class="card ">
+                                <div class="card-content">
+
+
+                                       <div class="col s2 offset-m10 offset-l11 offset-s10 left-align" style="margin-bottom: 5px; ">
+                                        <h:commandLink styleClass="">
+                                            <p:dataExporter type="xls" target="resultTable" fileName="reporte_corte_caja#{cashClosingBean.strDateToday}" pageOnly="false"/>
+                                            <i class="fas fa-file-download fa-2x light-blue-text text-darken-4"> 
+                                            </i>
+                                        </h:commandLink>
+                                       </div>
+
+
+                                    <div class="row" style="margin-bottom: 8px" >
+                                        <div class="col s12">
+                                   <p:tooltip for="resultTable" value="Clic sobre el registro para imprimir" position="top"/>
+                                            <p:dataTable id="resultTable" 
+                                                         styleClass="table table-hover"
+                                                         value="#{cashClosingBean.cashClosingLazyList}"
+                                                         var="row"
+                                                         emptyMessage="#{bundle['resulttable.nomatchfound']}"
+                                                         tableStyle="table-layout:auto;"
+                                                         reflow="true"
+                                                         paginator="true" rows="20"
+                                                         lazy="true"
+                                                         selectionMode="single"
+                                                         selection="#{cashClosingBean.selectedCashClosing}"
+                                                         rowKey="#{row.idCashClosing}"
+                                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                                         rowsPerPageTemplate="20,50,100,{ShowAll|'Todos'}"
+                                                         paginatorTemplate="{CurrentPageReport}
+                                                         {FirstPageLink}
+                                                         {PreviousPageLink}
+                                                         {PageLinks}
+                                                         {NextPageLink}
+                                                         {LastPageLink}
+                                                         {RowsPerPageDropdown}">
+                                                <p:ajax event="rowSelect" listener="#{cashClosingBean.print}" 
+                                                        update="searchForm tableForm"
+                                                        oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                                        />
+                                                
+                                                
+                                           
+   
+                                                <p:column headerText="Fecha corte">                                                    
+                                                    <h:outputText value="#{row.lastModDate}" >
+                                                        <f:convertDateTime type="date" pattern="dd-MMMMM-yy HH:mm"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                
+                                                <p:column headerText="Efectivo">
+                                                    <h:outputText value="#{row.cashTotal}" />
+                                                </p:column>
+                                                <p:column headerText="Caja efectivo">                                                 
+                                                    <h:outputText value="#{row.cashCount}" />
+                                                </p:column>
+                                                <p:column headerText="Dif. efectivo">                                                 
+                                                    <h:outputText value="#{row.difCash}" />
+                                                </p:column>
+                                                  <p:column headerText="Dolares">                                                 
+                                                    <h:outputText value="#{row.dollarTotal}" />
+                                                </p:column>
+                                                 <p:column headerText="Caja dolares">                                                 
+                                                    <h:outputText value="#{row.dollarCount}" />
+                                                </p:column>
+                                                 <p:column headerText="Dif. dolares">                                                 
+                                                     <h:outputText value="#{row.difDollar}" />
+                                                </p:column>
+                                                <p:column headerText="Crédito">                                                  
+                                                    <h:outputText value="#{row.cardTotal}" />
+                                                </p:column>
+                                                <p:column headerText="Débito">                                                  
+                                                    <h:outputText value="#{row.debitTotal}" />
+                                                </p:column>
+                                                 
+                                                <p:column headerText="Devoluciones">                                                 
+                                                    <h:outputText value="#{row.refundTotal}" />
+                                                </p:column>
+                                                
+                                                 <p:column headerText="Retiros">                                                 
+                                                     <h:outputText value="#{row.withdrawTotal}" />
+                                                </p:column>
+                                                <p:column headerText="Total">                                                 
+                                                    <h:outputText value="#{row.grandTotal}" />
+                                                </p:column>
+                                                
+                                                
+                                                <p:column headerText="Creado por:">                                                 
+                                                    <h:outputText value="#{row.modifiedBy}" />
+                                                </p:column>
+                                               
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </p:dataTable>
+                                        </div>
+                                         </div>
+                                        
+                                    
+
+                                    <div class="row">
+                                        <div class="col s2 offset-m10 offset-l11 offset-s10" style="margin-bottom: 5px; ">
+                                        <h:commandLink styleClass="">
+                                            <p:dataExporter type="xls" target="resultTable" fileName="reporte_ventas_resumen_#{cashClosingBean.strDateToday}" pageOnly="false"/>
+                                            <i class="fas fa-file-download fa-2x light-blue-text text-darken-4">
+                                            </i>
+                                        </h:commandLink>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>    
+
+
+                </h:form>
+                
+                
+                <div id="answerModal" class="modal">
+                    <h:panelGroup id="finishedProcessPanel">
+                        <div class="modal-content center-align black-text">
+                            <h5>#{bundle['modal.updtcreate.confirm']}</h5>
+
+                            <h6></h6>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row" style="width: 99%; margin-left: 0px">
+                                <div class="col s12 m6 l6 offset-m3 offset-l3">
+                                    <a class="modal-action modal-close waves-effect waves-light btn" style="width: 100%;"> <i class="icofont-check-alt"></i> Aceptar</a>  
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+                    <script>
+     initModal();
+    function initModal(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#processing').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}
+
+  function popupWindow(url, title) {      
+    window.open(url , title);        
+}    
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
