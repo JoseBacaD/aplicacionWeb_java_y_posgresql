@@ -31,6 +31,12 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
+
+	<!-- Guardar estado en el cliente para evitar ViewExpiredException en despliegues cloud -->
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
+    </context-param>
     
     <context-param>
         <param-name>javax.faces.WEBAPP_RESOURCES_DIRECTORY</param-name>
