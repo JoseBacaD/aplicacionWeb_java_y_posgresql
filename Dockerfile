@@ -11,9 +11,9 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 # Copiar el WAR empaquetado
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-# Configurar Tomcat para que escuche en el puerto dinámico de Render (PORT o 8080)
+# Puerto por defecto si PORT no está definido por Render
 ENV PORT=8080
 EXPOSE ${PORT}
 
-# Iniciar Tomcat en el puerto asignado por la variable de entorno PORT
-CMD ["sh", "-c", "sed -i \"s/port=\\\"8080\\\"/port=\\\"${PORT}\\\"/g\" /usr/local/tomcat/conf/server.xml && catalina.sh run"]
+# Script para reconfigurar los puertos de Tomcat adecuadamente
+CMD ["sh", "-c", "sed -i \"s/port=\\\"8080\\\"/port=\\\"${PORT}\\\"/g\" /usr/local/tomcat/conf/server.xml && sed -i \"s/port=\\\"8005\\\"/port=\\\"8006\\\"/g\" /usr/local/tomcat/conf/server.xml && catalina.sh run"]
