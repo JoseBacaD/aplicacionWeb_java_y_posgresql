@@ -1,8 +1,7 @@
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
-# Se agrega la bandera para permitir repositorios inseguros (HTTP)
-RUN mvn clean package -DskipTests -DallowInsecureRepository=true
+RUN mvn clean package -DskipTests
 
 FROM tomcat:10-jdk17-openjdk-slim
 RUN rm -rf /usr/local/tomcat/webapps/*
