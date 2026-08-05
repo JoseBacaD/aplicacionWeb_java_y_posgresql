@@ -88,13 +88,6 @@
     <version>5.0.0</version>
 </dependency>
 
-<dependency>
-    <groupId>net.sf.jasperreports</groupId>
-    <artifactId>jasperreports</artifactId>
-    <version>5.5.0</version>
-</dependency>
-
-
 
 <dependency>
   <groupId>org.postgresql</groupId>
@@ -103,16 +96,7 @@
 </dependency>
     </dependencies>
 
-	<repositories>
-        <repository>
-            <id>jaspersoft-third-party</id>
-            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-repositories-releases</url>
-        </repository>
-        <repository>
-            <id>jaspersoft-jr-ce</id>
-            <url>https://jaspersoft.jfrog.io/jaspersoft/jr-ce-snapshots</url>
-        </repository>
-    </repositories>
+
 
     <build>
         <plugins>
