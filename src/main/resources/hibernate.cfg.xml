@@ -64,9 +64,9 @@ Contributor(s):
     <!--conexión heroku-->
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.connection.url">jdbc:postgresql://ec2-54-164-22-242.compute-1.amazonaws.com:5432/d5d2ndbrq93nb5?sslmode=require</property>
-    <property name="hibernate.connection.username">rbfluajkwqusyo</property>
-    <property name="hibernate.connection.password">cc9f890394443e0fd215b0f29ddd1aab2fc6b46bf5fb131e538f25691308d289</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://ep-wild-mode-avg9appr-pooler.c-11.us-east-1.aws.neon.tech/POS-JSF?sslmode=require&channel_binding=require</property>
+    <property name="hibernate.connection.username">neondb_owner</property>
+    <property name="hibernate.connection.password">npg_FzP9GY5MLQNl</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.hbm2ddl.auto">update</property>
