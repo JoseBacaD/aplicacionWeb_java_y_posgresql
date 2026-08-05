@@ -103,6 +103,17 @@
 </dependency>
     </dependencies>
 
+	<repositories>
+        <repository>
+            <id>jaspersoft-third-party</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-repositories-releases</url>
+        </repository>
+        <repository>
+            <id>jaspersoft-jr-ce</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jr-ce-snapshots</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             
