@@ -1,0 +1,963 @@
+
+--CREATE OR REPLACE FUNCTION
+--	findCountItem(description varchar, code varchar, department int, currency int, idLocation int, initCode bigint, endCode bigint, idProvider int, idBrand int)
+--	returns table(id_item bigint)
+--AS $$
+--SELECT COUNT(distinct id_item) AS id_item
+--		
+--		FROM 
+--			item 
+--		WHERE
+--		
+--			desc_item ilike '%' || description || '%' OR
+--			standard_code_item = code OR
+--			id_department = department OR
+--			id_currency = currency OR
+--			id_provider = idProvider OR
+--			id_brand = idBrand OR
+--			id_location = idLocation 
+--			OR id_item BETWEEN initCode and endCode
+--
+--$$ LANGUAGE sql;
+--
+--========================================================================================================================================
+--CREATE OR REPLACE FUNCTION
+--	findCountItemByDesc(idDivition int, idSubdiv int, description varchar)
+--	returns table(id_item bigint)
+--AS $$
+--SELECT COUNT(distinct id_item) AS id_item
+--		
+--		FROM 
+--			item 
+--		WHERE
+--		
+--			desc_item ILIKE '%' || description || '%' AND
+--			id_divition = iddivition  AND
+--			id_subdivition = idsubdiv
+--
+--$$ LANGUAGE sql;
+--
+--========================================================================================================================================
+CREATE OR REPLACE FUNCTION
+	finditem(description varchar, code varchar, department int, currency int, idLocation int, initCode bigint, endCode bigint, idProvider int, idBrand int)
+	returns setof item
+
+AS $$
+			   
+
+		SELECT distinct on (id_item) id_item,
+			   boolean_wildcard,
+			   creation_date,
+			   desc_item,
+			   icon_item_name,
+			   id_divition, 
+			   id_subdivition, 
+			   int_wildcard,
+			   item_location,
+			   item_stock,
+			   last_mod_date,
+			   min_quantity, 		   
+			   modified_by, 
+			   price_sale, 
+			   sale_by_fraction,
+			   short_desc_item, 
+			   standard_code_item, 
+			   varchar_wildcard,
+			   wholesale_price, 
+		    	   id_currency,
+			   id_department,
+			   id_uom,					
+			   min_stock_allowed,
+			   id_brand,
+			   id_provider,
+			   id_location,
+			   count(id_item) OVER() as count_rows,
+			   price_provider,
+  			   id_provider_2,
+			   id_provider_3,
+			   code_provider,
+			   code_provider2,
+			   code_provider3,
+		           price_provider2,
+			   price_provider3
+			   
+		FROM 
+			item 
+		WHERE
+		
+			desc_item ilike '%' || description || '%' OR
+			standard_code_item = code OR
+			id_department = department OR
+			id_currency = currency OR
+			id_provider = idProvider OR
+			id_brand = idBrand OR
+			id_location = idLocation 
+			OR id_item BETWEEN initCode and endCode
+			
+
+$$ LANGUAGE SQL;
+--=====================================================================================================================
+CREATE OR REPLACE FUNCTION
+	finditemByCode(idDivition int, idSubdivition int, code varchar)
+	returns setof item
+
+AS $$
+			   
+
+		SELECT distinct on (id_item) id_item,
+			   boolean_wildcard,
+			   creation_date,
+			   desc_item,
+			   icon_item_name,
+			   id_divition, 
+			   id_subdivition, 
+			   int_wildcard,
+			   item_location,
+			   item_stock,
+			   last_mod_date,
+			   min_quantity, 		   
+			   modified_by, 
+			   price_sale, 
+			   sale_by_fraction,
+			   short_desc_item, 
+			   standard_code_item, 
+			   varchar_wildcard,
+			   wholesale_price, 
+		    	   id_currency,
+			   id_department,
+			   id_uom,					
+			   min_stock_allowed,
+			   id_brand,
+			   id_provider,
+			   id_location,
+			   count(id_item) OVER() as count_rows,
+			   price_provider,
+  			   id_provider_2,
+			   id_provider_3,
+			   code_provider,
+			   code_provider2,
+			   code_provider3,
+		           price_provider2,
+			   price_provider3
+			   
+		FROM 
+			item 
+		WHERE
+		
+			
+			standard_code_item = code AND
+			id_divition = idDivition  AND
+			id_subdivition = idSubdivition
+			
+			
+
+$$ LANGUAGE SQL;
+--=====================================================================================================================
+CREATE OR REPLACE FUNCTION
+finditemByDesc(idDivition int, idSubdiv int, description varchar )
+	returns setof item
+
+AS $$
+			   
+
+		SELECT distinct on (id_item) id_item,
+			   boolean_wildcard,
+			   creation_date,
+			   desc_item,
+			   icon_item_name,
+			   id_divition, 
+			   id_subdivition, 
+			   int_wildcard,
+			   item_location,
+			   item_stock,
+			   last_mod_date,
+			   min_quantity, 		   
+			   modified_by, 
+			   price_sale, 
+			   sale_by_fraction,
+			   short_desc_item, 
+			   standard_code_item, 
+			   varchar_wildcard,
+			   wholesale_price, 
+		    	   id_currency,
+			   id_department,
+			   id_uom,					
+			   min_stock_allowed,
+			   id_brand,
+			   id_provider,
+			   id_location,
+			   count(id_item) OVER() as count_rows,
+			   price_provider,
+  			   id_provider_2,
+			   id_provider_3,
+			   code_provider,
+			   code_provider2,
+			   code_provider3,
+		           price_provider2,
+			   price_provider3
+			   
+		FROM 
+			item 
+		WHERE
+		
+			
+			desc_item ilike '%' || description || '%' AND
+			id_divition = idDivition  AND
+			id_subdivition = idsubdiv
+			
+			
+
+$$ LANGUAGE SQL;
+--=====================================================================================================================
+--CREATE OR REPLACE FUNCTION
+--	findCountDepartment(depName varchar, initCode bigint, endCode bigint)
+--	returns table(id_department bigint)
+--AS $$
+--SELECT COUNT(distinct id_department) AS id_department
+--		
+--		FROM 
+--			department
+--		WHERE
+--		
+--			desc_department ILIKE '%' || depName || '%' OR
+--			code_department BETWEEN initCode and endCode
+--
+--$$ LANGUAGE sql;
+
+--=======================================================================================================================
+CREATE OR REPLACE FUNCTION
+	finddepartment(depName varchar, initCode bigint, endCode bigint)
+	returns setof department
+
+AS $$
+			   
+
+		SELECT distinct on (id_department) id_department,
+			   code_department,
+			   creation_date,
+			   desc_department,
+			   last_mod_date,
+			   modified_by,
+	                   count(id_department) OVER() as count_rows 
+		FROM 
+			department
+		WHERE
+		
+			desc_department ilike '%' || depName || '%' OR
+			code_department BETWEEN initCode and endCode
+			
+
+$$ LANGUAGE SQL;
+
+--==============================================================================================================
+--CREATE OR REPLACE FUNCTION
+--	findCountUOM(uomDesc varchar, initCode bigint, endCode bigint)
+--	returns table(id_uom bigint)
+--AS $$
+--SELECT COUNT(distinct id_uom) AS id_uom
+--		
+--		FROM 
+--			unit_of_measure_uom
+--		WHERE
+--		
+--			desc_uom ILIKE '%' || uomDesc || '%' OR
+--			code_uom BETWEEN initCode and endCode
+--
+--$$ LANGUAGE sql;
+--=============================================================================================================
+
+CREATE OR REPLACE FUNCTION
+	findUOM(uomDesc varchar, initCode bigint, endCode bigint)
+	returns setof unit_of_measure_uom
+
+AS $$
+			   
+
+		SELECT distinct on (id_uom) id_uom,
+			   code_uom,
+			   creation_date,
+			   desc_uom,
+			   last_mod_date,
+			   modified_by,
+			   short_name,
+			   count(id_uom) OVER() as count_rows
+		FROM 
+			unit_of_measure_uom
+		WHERE
+		
+			desc_uom ilike '%' || uomDesc || '%' OR
+			code_uom BETWEEN initCode and endCode
+			
+
+$$ LANGUAGE SQL;
+
+
+--==================================================================================================================
+CREATE OR REPLACE FUNCTION
+	discountItemStock(headerFolio bigint)
+	returns table (id_item int)
+AS $$
+
+	update 
+		item 
+	set 
+		item_stock = item_stock - subquery.quantity_item
+ 	from (select 
+				quantity_item, standard_code_item
+			from
+				sale_detail sd
+			where
+				folio = headerFolio) AS subquery
+				
+				
+	where item.standard_code_item = subquery.standard_code_item;
+		  
+select 0 as id_item
+
+
+$$ LANGUAGE sql;
+
+
+--=====================================================================================================================
+CREATE OR REPLACE FUNCTION countSaleHeader(idDivition int, idSubDiv int, x date, y date, isWithdraw boolean) RETURNS TABLE (id_sale_header bigint) AS $$
+
+		SELECT COUNT(id_sale_header) AS id_sale_header 
+		FROM 
+			sale_header
+		WHERE
+			id_divition = idDivition and
+			id_subdivition = idSubDiv and
+			creation_date between x and y and
+			is_withdraw = isWithdraw
+			
+
+$$ LANGUAGE sql;
+
+--======================================================================================================================
+
+
+CREATE OR REPLACE FUNCTION
+	findSaleHeader(idDivition int, idSubDiv int,x date, y date, isWithdraw boolean)
+RETURNS setof sale_header AS $$
+
+		SELECT 
+			  id_sale_header,
+			  card_payment,
+			  cash_payment,
+			  cash_refund,
+			  cash_withdraw,
+			  comment,
+			  consecutive,
+			  creation_date,
+			  folio,
+			  id_divition,
+			  id_subdivition,
+			  is_withdraw,
+			  is_refund,
+			  modified_by,
+			  other_payment,
+			  sale_rate,
+			  sale_date,
+			  tax_total,
+			  total_sale,
+			  has_isr_invoice,
+			  debit_payment,
+			  count(id_sale_header) OVER() as count_rows
+
+		FROM 
+			sale_header
+		WHERE
+			id_divition = idDivition and
+			id_subdivition = idSubDiv and
+			creation_date between x and y and
+			is_withdraw = isWithdraw
+		ORDER BY
+			folio desc;
+
+$$ LANGUAGE SQL;
+--====================================================================================================================
+CREATE OR REPLACE FUNCTION findSaleDetail(idDivition int, idSubDiv int,x date, y date) 
+RETURNS
+ setof sale_detail
+ AS $$
+
+       SELECT  sd.id_detail
+			  ,sd.creation_date
+			  ,sd.item_tax
+			  ,sd.price_detail
+			  ,sd.quantity_item
+			  ,sd.sale_date
+			  ,sd.folio
+			  ,sd.standard_code_item
+			  ,count(id_detail) OVER() as count_rows
+		FROM 
+			sale_detail sd
+		WHERE sd.folio in (
+			select folio from  sale_header where id_divition = idDivition and
+			id_subdivition = idSubDiv and
+			creation_date between x and y
+			)
+			
+		ORDER BY
+			sd.folio desc;
+
+
+
+
+$$ LANGUAGE sql;
+
+
+--======================================================================================================================
+--CREATE OR REPLACE FUNCTION countSaleDetail(idDivition int, idSubDiv int,x date, y date) RETURNS TABLE (totalCount bigint) AS $$
+--
+--		SELECT COUNT(sd.folio) AS totalCount 
+--		FROM 
+--			sale_detail sd
+--	    WHERE sd.folio in (
+--			select folio from  sale_header where id_divition = idDivition and
+--			id_subdivition = idSubDiv and
+--			creation_date between x and y
+--			)
+--$$ LANGUAGE sql;
+
+
+--====================================================================================================================
+
+CREATE OR REPLACE FUNCTION
+	findAppConfig(idDivition integer, idSubDiv integer)
+RETURNS setof app_config AS $$
+
+		SELECT 
+			*
+		FROM 
+			app_config
+		WHERE id_divition = idDivition and id_subdivition = idSubDiv
+		limit 1;
+
+$$ LANGUAGE SQL;
+
+
+--select * from findAppConfig(1,1)
+
+--========================================================================================================
+CREATE OR REPLACE FUNCTION findSaleDetailByFolio(idDivition int, idSubDiv int,pFolio bigint) 
+RETURNS setof sale_detail
+ AS $$
+
+	SELECT
+			*
+		FROM 
+			sale_detail sd
+		WHERE sd.folio in (
+			select folio from  sale_header where id_divition = idDivition and
+			id_subdivition = idSubDiv and
+			folio = pFolio and
+			is_withdraw = false and
+			is_refund = false
+			
+			)
+			
+		ORDER BY
+			sd.folio desc;
+
+
+
+
+$$ LANGUAGE sql;
+
+--=========================================================================================================
+CREATE OR REPLACE FUNCTION
+	findUsrByAlias(userName varchar)
+	returns setof user_app
+
+AS $$
+			   
+
+		SELECT distinct on (id_usr_app) id_usr_app,
+		       id_divition,
+			   id_subdivition,
+			   is_active_bit,
+			   last_mod_date,
+			   modified_by,
+			   user_alias,
+			   user_name,
+			   user_password
+		FROM 
+			user_app
+		WHERE
+		
+			user_alias = userName
+			
+
+$$ LANGUAGE SQL;
+
+--====================================================================================================================
+CREATE OR REPLACE FUNCTION
+	findFrecItemByCode(standardCodeItem varchar)
+	returns setof frecuent_sale_item
+
+AS $$
+			   
+
+		SELECT distinct on (id_frecuent_sale_item) id_frecuent_sale_item,
+		       creation_date,
+			   is_frecuent_extra,
+			   is_frecuent_other,
+			   is_frecuent_promo,
+			   standard_code_item
+		FROM 
+			frecuent_sale_item
+		WHERE
+		
+			standard_code_item = standardCodeItem
+			
+
+$$ LANGUAGE SQL;
+--====================================================================================================================
+CREATE OR REPLACE FUNCTION
+findFrecItem()
+	returns TABLE ( id_frecuent_sale_item int,
+			   creation_date date,
+			   is_frecuent_extra bool,
+			   is_frecuent_other bool,
+			   is_frecuent_promo bool,
+			   standard_code_item varchar
+			   )
+
+AS $$
+			   
+
+		SELECT subquery.id_frecuent_sale_item,
+			   subquery.creation_date,
+			   subquery.is_frecuent_extra,
+			   subquery.is_frecuent_other,
+			   subquery.is_frecuent_promo,
+			   subquery.standard_code_item
+			  
+		FROM 
+		
+			(select 
+			   fsi.id_frecuent_sale_item,
+		       fsi.creation_date,
+			   fsi.is_frecuent_extra,
+			   fsi.is_frecuent_other,
+			   fsi.is_frecuent_promo,
+			   fsi.standard_code_item,
+			   i.desc_item
+			 from 
+			 	item i, frecuent_sale_item fsi
+			 where fsi.standard_code_item = i.standard_code_item) as subquery
+			
+			order by subquery.desc_item asc
+			
+			
+			
+			
+			
+
+$$ LANGUAGE SQL;
+
+--select * from findFrecItem();
+
+
+--===========================================================================================================
+
+CREATE OR REPLACE FUNCTION
+	findTotalSale(idDivition int, idSubDiv int,x date, y date)
+RETURNS TABLE (tot_cash numeric,
+			   tot_card numeric,
+			   tot_other numeric,
+			   grand_total numeric,
+		           tot_withdraw numeric,
+			   tot_refund numeric,
+			   tot_debit numeric
+			   ) AS $$
+
+		SELECT 
+			sum(cash_payment) as tot_cash,
+			sum(card_payment) as tot_card,
+			sum(other_payment) as tot_other,
+			sum(cash_payment + card_payment + debit_payment + other_payment + cash_withdraw + cash_refund) as grand_total,
+			sum(cash_withdraw) as tot_withdraw,
+			sum(cash_refund) as tot_refund,
+			sum(debit_payment) as tot_debit
+		FROM 
+			sale_header
+		WHERE
+			id_divition = idDivition and
+			id_subdivition = idSubDiv and
+			creation_date between x and y
+		
+
+$$ LANGUAGE SQL;
+
+
+
+--===============================================================================================================================
+CREATE OR REPLACE FUNCTION
+	findprovider(providerName varchar, initId int, endId int)
+	returns setof provider
+
+AS $$
+			   
+
+		SELECT distinct on (id_provider) id_provider,
+			   contact_info_provider,
+			   last_mod_date,
+			   modified_by,
+			   name_provider,
+		           provider_phone_number,
+		           count(id_provider) OVER() as count_rows
+		           
+		FROM 
+			provider
+		WHERE
+		
+			name_provider ilike '%' || providerName || '%' OR
+			id_provider BETWEEN initId and endId
+			
+
+$$ LANGUAGE SQL;
+--===============================================================================================================================
+--CREATE OR REPLACE FUNCTION
+--	findCountProvider(providerName varchar, initId int, endId int)
+--	returns table(id_provider bigint)
+--AS $$
+--SELECT COUNT(distinct id_provider) AS id_provider
+--		
+--		FROM 
+--			provider
+--		WHERE
+--		
+--			name_provider ILIKE '%' || providerName || '%' OR
+--			id_provider BETWEEN initId and endId
+--
+--$$ LANGUAGE sql;
+--===============================================================================================================================
+CREATE OR REPLACE FUNCTION
+	findBrand(brandName varchar, initId int, endId int)
+	returns setof brand
+
+AS $$
+			   
+
+		SELECT distinct on (id_brand) id_brand,
+			   last_mod_date,
+			   modified_by,
+			   name_brand,
+			   count(id_brand) OVER() as count_rows
+		FROM 
+			brand
+		WHERE
+		
+			name_brand ilike '%' || brandName || '%' OR
+			id_brand BETWEEN initId and endId
+			
+
+$$ LANGUAGE SQL;
+--===============================================================================================================================
+--CREATE OR REPLACE FUNCTION
+--	findCountBrand(brandName varchar, initId int, endId int)
+--	returns table(id_brand bigint)
+--AS $$
+--SELECT COUNT(distinct id_brand) AS id_brand
+--		
+--		FROM 
+--			brand
+--		WHERE
+--		
+--			name_brand ILIKE '%' || brandName || '%' OR
+--			id_brand BETWEEN initId and endId
+--
+--$$ LANGUAGE sql;
+--===============================================================================================================================
+CREATE OR REPLACE FUNCTION
+	findLocation(locationName varchar, initId int, endId int)
+	returns setof location
+
+AS $$
+			   
+
+		SELECT distinct on (id_location) id_location,
+			   last_mod_date,
+			   modified_by,
+			   name_location,
+			   count(id_location) OVER() as count_rows
+		FROM 
+			location
+		WHERE
+		
+			name_location ilike '%' || locationName || '%' OR
+			id_location BETWEEN initId and endId
+			
+
+$$ LANGUAGE SQL;
+--===============================================================================================================================
+--CREATE OR REPLACE FUNCTION
+--	findCountLocation(locationName varchar, initId int, endId int)
+--	returns table(id_location bigint)
+--AS $$
+--SELECT COUNT(distinct id_location) AS id_location
+--		
+--		FROM 
+--			location
+--		WHERE
+--		
+--			name_location ILIKE '%' || locationName || '%' OR
+--			id_location BETWEEN initId and endId
+--
+--$$ LANGUAGE sql;
+--===============================================================================================================================
+CREATE OR REPLACE FUNCTION
+	findLowStock(idDivition int, idSubdivition int)
+	returns setof item
+
+AS $$
+			   
+
+				   
+
+		SELECT distinct on (id_item) id_item,
+			   boolean_wildcard,
+			   creation_date,
+			   desc_item,
+			   icon_item_name,
+			   id_divition, 
+			   id_subdivition, 
+			   int_wildcard,
+			   item_location,
+			   item_stock,
+			   last_mod_date,
+			   min_quantity, 		   
+			   min_stock_allowed,
+			   modified_by, 
+			   price_sale, 
+			   sale_by_fraction,
+			   short_desc_item, 
+			   standard_code_item, 
+			   varchar_wildcard,
+			   wholesale_price, 
+			   id_brand,
+			   id_currency,
+			   id_department,
+			   id_provider,
+			   id_uom,
+			   id_location,
+			   count(id_item) OVER() as count_rows,
+ 			   price_provider,
+			   id_provider_2,
+			   id_provider_3,
+			   code_provider,
+			   code_provider2,
+			   code_provider3,
+		           price_provider2,
+			   price_provider3
+			   
+		FROM 
+			item 
+		WHERE
+		
+			id_divition = idDivition  AND
+			id_subdivition = idSubdivition  and
+		        item_stock < min_stock_allowed
+			
+
+			
+
+$$ LANGUAGE SQL;
+
+--======================================================================================================
+CREATE OR REPLACE FUNCTION
+	discountItemStockOneByOne(idItem integer, pieces numeric)
+	returns table (id_item int)
+AS $$
+
+	update 
+		item 
+	set 
+		item_stock = item_stock - pieces
+ 	
+				
+				
+	where item.id_item = idItem;
+		  
+select 0 as id_item
+
+
+$$ LANGUAGE sql;
+
+--======================================================================================================
+CREATE OR REPLACE FUNCTION
+	findCashClosing(x date, y date)
+RETURNS setof cash_closing AS $$
+
+		SELECT 
+			  id_cash_closing,
+			  card_total,
+			  cash_count,
+			  cash_total,
+			  dollar_count,
+			  dollar_total,
+			  grand_total,
+			  last_mod_date,
+			  modified_by,
+			  refund_total,
+			  withdraw_total,
+			  cash_difference,
+			  dollar_difference,
+			  creation_date,
+			  debit_total,
+			  count(id_cash_closing) OVER() as count_rows
+		FROM 
+			cash_closing
+		WHERE
+	
+			creation_date between x and y;
+		
+$$
+LANGUAGE SQL;
+
+
+
+--======================================================================================================
+--CREATE OR REPLACE FUNCTION
+--	countCashClosing(x date, y date)
+--	returns table(id_cash_closing bigint)
+--AS $$
+--SELECT COUNT(id_cash_closing) AS id_cash_closing 
+--		FROM 
+--			cash_closing
+--		WHERE
+--			
+--			creation_date between x and y
+--
+--
+--$$ LANGUAGE sql;
+
+--======================================================================================================
+CREATE OR REPLACE FUNCTION
+	findTotalInvoiced(idDivition int, idSubDiv int,x date, y date)
+RETURNS TABLE (tot_invoiced numeric) AS $$
+
+		SELECT 
+			sum(total_sale) as tot_invoiced
+			
+		FROM 
+			sale_header
+		WHERE
+			id_divition = idDivition and
+			id_subdivition = idSubDiv and
+			creation_date between x and y and
+			has_isr_invoice = true
+			
+
+$$ LANGUAGE SQL;
+--======================================================================================================
+
+--user_app
+insert into user_app values (3,1,1,true,'2021-03-12','developer','administrador','Administrador','@C1ber-');
+insert into user_app values (4,1,1,true,'2021-03-12','developer','cajero','Cajero','C4j@');
+
+--menu_option estas opciónes deben quedar así, de lo contrario no va a encontrar permisos
+--los códigos de las opciones deben coincidir con los códigos de opción declarados en javaEnum MenuOptionEnum
+--del proyecto.
+insert into menu_option values (1,1,'fas fa-cash-register','Ventas','ProcSale.xhtml','developer',3);
+insert into menu_option values (2,2,'icofont-papers','Ventas detalle','CatSaleDetail.xhtml','developer',2); 
+insert into menu_option values (3,3,'icofont-papers','Ventas resumen','CatSaleHeader.xhtml','developer',2); 
+insert into menu_option values (4,4,'icofont-book','Cat. departamentos','CatDepartment.xhtml','developer',1);
+insert into menu_option values (5,5,'icofont-book','Cat. artículos','CatItem.xhtml','developer',1);
+insert into menu_option values (6,6,'icofont-book','Cat. unidad de medida','catUOM.xhtml','developer',1);
+insert into menu_option values (7,7,'fas fa-cog','Configuración','AppConfig.xhtml','developer',4);
+insert into menu_option values (8,8,'icofont-home','Inicio','Home.xhtml','developer');
+insert into menu_option values (9,9,'icofont-table','Artículos frecuentes','cat-frecuent.xhtml','developer',4);
+insert into menu_option values (10,10,'fas fa-exchange-alt','Devoluciones','proc-refund.xhtml','developer',3);
+insert into menu_option values (11,11,'fas fa-tags','Etiquetas','label-item-print.xhtml','developer',5);
+insert into menu_option values (12,12,'icofont-book','Proveedores','cat-provider.xhtml','developer',1);
+insert into menu_option values (13,13,'icofont-book','Marcas','cat-brand.xhtml','developer',1);
+insert into menu_option values (14,14,'icofont-book','Ubicaciones','cat-location.xhtml','developer',1);
+insert into menu_option values (15,15,'icofont-book','Frecuentes','common-sale-report.xhtml','developer',2);
+insert into menu_option values (16,16,'icofont-book','Corte caja','cash-closing.xhtml','developer',3);
+insert into menu_option values (17,17,'icofont-book','Reporte corte caja','cat-cash-closing.xhtml','developer',2);
+
+--=============================================================================================================
+
+--permisos, son los permisos que va a terner el usuario dentro de la aplicación, en este caso tendrá permiso a todas
+--las opciones del menú
+--usuario cajero dejar solo opciones permitidas
+insert into menu_option_permission values (10,true,true,'2021-03-12','developer',1,4);
+insert into menu_option_permission values (11,true,true,'2021-03-12','developer',9,4);
+insert into menu_option_permission values (12,true,true,'2021-03-12','developer',10,3);
+
+--usuario administrador acceso total
+insert into menu_option_permission values (1,true,true,'2021-03-12','developer',1,3,true);
+insert into menu_option_permission values (2,true,true,'2021-03-12','developer',2,3,true);
+insert into menu_option_permission values (3,true,true,'2021-03-12','developer',3,3,true);
+insert into menu_option_permission values (4,true,true,'2021-03-12','developer',4,3,true);
+insert into menu_option_permission values (5,true,true,'2021-03-12','developer',5,3,true);
+insert into menu_option_permission values (6,true,true,'2021-03-12','developer',6,3,true);
+insert into menu_option_permission values (7,true,true,'2021-03-12','developer',7,3,true);
+insert into menu_option_permission values (9,true,true,'2021-03-12','developer',9,3,true);
+insert into menu_option_permission values (10,true,true,'2022-04-01','developer',10,3,true);
+insert into menu_option_permission values (12,true,true,'2022-02-01','developer',11,3,true);
+insert into menu_option_permission values (14,true,true,'2022-02-01','developer',12,3,true);
+insert into menu_option_permission values (15,true,true,'2022-02-03','developer',13,3,true);
+insert into menu_option_permission values (16,true,true,'2022-02-03','developer',14,3,true);
+insert into menu_option_permission values (17,true,true,'2022-02-03','developer',15,3,true);
+insert into menu_option_permission values (18,true,true,'2022-02-03','developer',16,3,true);
+insert into menu_option_permission values (19,true,true,'2022-02-03','developer',17,3,true);
+
+--select * from findCountItem('ham',null,null,null,null,null,null)
+--select * from findItem('ham',null,null,null,null,null,null)
+--select * from item
+
+
+--app config, es la configuración inicial que va tener dependiendo de cada cliente
+insert into app_config values (1,null,'mi negocio',1,1,1,null,'2021-02-04','developer',1,true,21,'calle falsa 534, colonia virtual 3','656555555',null,.08);
+
+--moneda
+insert into currency values (2,'2021-02-04',1,'peso','mxn','2021-02-04','developer');
+
+--departamentos y UOMs debe haber un archivo aparte con en una carpeta específica de cada cliente
+
+
+--falta SP finditebydesc done
+--crear catalogo de articulos frecuentes DONE
+--agregar seguridad done!
+--agregar impresión de tickets done!
+--arreglar defecto en guardado de configuración done
+--defecto en catálogos, después crear registro con llave duplicada ya no consulta ni actualiza hasta que recargas la página done
+--agregar búsqueda rápida done
+--agregar capcha DONE
+--agregar funcionalidad a seccion de recientes DONE
+--validar permisos para entrar a las opciones a través de la url despues de que inicias sesión DONE
+--agregar la conversion de dolares en el modal de pago de la opción de ventas DONE
+--hacer el calculo del precio de cada articulo para las secciones de promociones, frecuentes y extras DONE
+--arreglar defecto en catálogo de articulos, se ve espacio en blanco a la derecha de la pantalla TRIED BUT NOT DONE
+--correccion en calculo del iva y precio al público pantalla de ventas DONE
+--corrección en acomodo de combo box del catalogo de items y limite de caracteres para desc y short desc DONE
+
+--correción de defecto estético en menú principal DONE
+--agregar nombre de usuario a menú lateral DONE
+--se agregó configuración de pool de conexiones en archivo cfg.xml debido a que no funcionaba bien en una instalación local DONE
+
+--agregar menú padre o categoria para ordenar las opciones de menú
+--agregar limitador de registros
+--tentativo poner la lista de recientes de la pantalla de ventas en una tabla en BD.
+
+--agregar a impresión física de reporte de ventas las columnas siguientes folio, descripción, cantidad, precio e IVA, y fecha
+--en encabezado, y "venta global" como subtitulo. DONE
+
+--agregar codigo de barras al ticket de venta DONE
+--agregar campo de comentarios al ticket de venta DONE
+--validar si regreso o no el boton de eliminar de los catalogos
+--agregar a la configuración la opción para que elijan el formato de fecha que requieran para que aparezca en las
+--impresiones fisicas
+
+--pantalla de devoluciones DONE
+--pantalla de cotizaciones
+--pantalla de impresión de etiquetas con código de barras
+--modal de processing en pantalla de ventas no se debe quitar al hacer clic
+--todos los formatos de fechas en los reportes
+--agregar modal a pantalla de login
+--agregar nombre del negocio en pantalla de login
+
