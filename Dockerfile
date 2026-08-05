@@ -10,8 +10,10 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-ENV PORT=8080
-ENV JAVA_OPTS="-Xms128m -Xmx384m -XX:+UseSerialGC"
-EXPOSE ${PORT}
+# Modificar server.xml para usar la variable de entorno PORT que da Render
+RUN sed -i 's/port="8080"/port="${env.PORT}"/g' /usr/local/tomcat/conf/server.xml
 
-CMD ["sh", "-c", "export CATALINA_OPTS=\"-Dbio.http.port=${PORT} -Dhttp.port=${PORT}\" && catalina.sh run"]
+ENV PORT=8080
+EXPOSE 8080
+
+CMD ["catalina.sh", "run"]
