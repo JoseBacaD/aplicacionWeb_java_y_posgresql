@@ -1,4 +1,4 @@
-# 1. Compilación en Java 11
+# 1. Compilación
 FROM maven:3.9-eclipse-temurin-11 AS build
 WORKDIR /app
 COPY . .
@@ -13,8 +13,8 @@ COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 # Desactivar puerto de shutdown
 RUN sed -i 's/port="8005" shutdown="SHUTDOWN"/port="-1" shutdown="SHUTDOWN"/g' /usr/local/tomcat/conf/server.xml
 
-# Límite estricto de memoria para el plan gratuito de 512MB de Render
-ENV JAVA_OPTS="-Xms128m -Xmx384m -XX:+UseSerialGC -XX:MaxMetaspaceSize=160m"
+# Optimizaciones de inicio rápido para Java/Tomcat y límites de memoria
+ENV JAVA_OPTS="-Xms128m -Xmx384m -XX:+UseSerialGC -Djava.security.egd=file:/dev/./urandom -Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar"
 ENV PORT=8080
 EXPOSE 8080
 
