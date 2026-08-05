@@ -1,18 +1,19 @@
-# Compilación con Java 17
+# 1. Compilación
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Ejecución en Tomcat 9 con Java 11 actualizado (Soporte Cgroups v2 para Docker/Render)
-FROM tomcat:9.0-jre11-openjdk-slim
+# 2. Runtime en Tomcat 9
+FROM tomcat:9.0-jdk11-temurin
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-# Reemplazar el puerto 8080 por la variable PORT que asigna Render
-RUN sed -i 's/port="8080"/port="${env.PORT}"/g' /usr/local/tomcat/conf/server.xml
+# Desactivar el puerto de Shutdown (8005 -> -1) para evitar que Render envíe el Health Check ahí
+RUN sed -i 's/port="8005" shutdown="SHUTDOWN"/port="-1" shutdown="SHUTDOWN"/g' /usr/local/tomcat/conf/server.xml
 
+# Configurar el puerto HTTP predeterminado
 ENV PORT=8080
 EXPOSE 8080
 
