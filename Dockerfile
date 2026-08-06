@@ -13,8 +13,8 @@ COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 # Desactivar puerto de shutdown
 RUN sed -i 's/port="8005" shutdown="SHUTDOWN"/port="-1" shutdown="SHUTDOWN"/g' /usr/local/tomcat/conf/server.xml
 
-# Optimizaciones de inicio rápido para Java/Tomcat y límites de memoria
-ENV JAVA_OPTS="-Xms128m -Xmx384m -XX:+UseSerialGC -Djava.security.egd=file:/dev/./urandom -Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar"
+# Banderas de optimización: Generación rápida de entropía y omisión de escaneo JAR innecesario
+ENV JAVA_OPTS="-Xms128m -Xmx384m -XX:+UseSerialGC -Djava.security.egd=file:/dev/./urandom -Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar"
 ENV PORT=8080
 EXPOSE 8080
 
