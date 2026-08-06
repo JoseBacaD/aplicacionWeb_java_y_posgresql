@@ -1,0 +1,280 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+
+               <ui:define name="content">
+                   <f:metadata>
+                       <f:event type="preRenderView" listener="#{catAppConfigBean.onPageLoad}"/>
+                </f:metadata>
+                   <p:ajaxStatus  onstart="$('#processing').modal('open');" onsuccess="$('#processing').modal('close');" />
+ 
+
+            <h:form id="searchForm">
+
+                    <div class="row" style="margin-bottom: 0px;" >
+                        <div class="col s12">
+                            <div class="card " style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <h5><i class="fas fa-cog"/> Configuración</h5>
+
+                                    <h6>Datos del negocio</h6>
+                                    
+                                    <div class="row">
+
+                                        <div class="col s12 m6 l6 input-field">
+                                            <p:inputText
+                                               
+                                                id="field1"
+                                                required="true"
+                                                converter="EmptyToNullConverter"
+                                                value = "#{catAppConfigBean.appConfig.companyName}"
+                                                requiredMessage="#{bundle.validationmessagereguired}">
+                                               
+                                            </p:inputText>
+                                            <h:messages class="red-text" for="field1"/>
+                                            <label for="field1" >Nombre</label> 
+                                        </div>
+                                            <div class="col s12 m6 l6 input-field">
+                                            <p:inputText
+                                               
+                                                id="address"
+                                                required="true"
+                                                converter="EmptyToNullConverter"
+                                                value = "#{catAppConfigBean.appConfig.storeAddress}"
+                                                requiredMessage="#{bundle.validationmessagereguired}">
+                                               
+                                            </p:inputText>
+                                            <h:messages class="red-text" for="address"/>
+                                            <label for="address" >Dirección</label>
+                                            
+                                        </div>
+                                        </div>
+                                    
+                                    <div class="row">
+
+                                        <div class="col s12 m6 l6 input-field">
+                                            <p:inputText
+                                               
+                                                id="storePhone"
+                                                required="true"
+                                                converter="EmptyToNullConverter"
+                                                value = "#{catAppConfigBean.appConfig.storePhone}"
+                                                requiredMessage="#{bundle.validationmessagereguired}">
+                                               
+                                            </p:inputText>
+                                            <h:messages class="red-text" for="storePhone"/>
+                                            <label for="storePhone" >Telefono</label> 
+                                            
+                                            
+                                        </div>
+                                        </div>
+                                    
+                                    <h6>Ventas</h6>
+                                         <div class="row">
+                                        <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field2"
+                                        value = "#{catAppConfigBean.appConfig.rateSale}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}">
+
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field2"/>
+                                    <label for="field2">Tipo de cambio</label>
+                                </div>
+                                             
+                                     <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field3"
+                                        value = "#{catAppConfigBean.appConfig.tax}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}">
+
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field3"/>
+                                    <label for="field3">Impuesto</label>
+                                </div>
+                                    </div>
+                                    <h6>Impresión</h6>
+                                    <div class="row">
+                                        <div class=" col s12 l6 m6 ">
+                                 <label  for="filter12" >Imprimir recibo</label> 
+                                    <div class="switch">
+                                <label>
+                                  No
+                                  <h:selectBooleanCheckbox value="#{catAppConfigBean.appConfig.printTicket}"></h:selectBooleanCheckbox>
+                                  <span class="lever"></span>
+                                  Si
+                                </label>
+                                    </div>    
+                                        
+                              </div> 
+                                        <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="printCopies"
+                                        value = "#{catAppConfigBean.appConfig.printCopies}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="Mínimo 1, Máximo 6">
+                                        
+                                        <f:validateLongRange minimum="1" maximum="6" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="printCopies"/>
+                                    <label for="field2">Número de recibos</label>
+                                </div>
+                                        
+                                        
+                                    </div>
+                                    <h6>Etiquetas</h6>
+                                    <div class="row">
+                                        
+                                       <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="printLabelAdjustment"
+                                        value = "#{catAppConfigBean.appConfig.printLabelAdjustment}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="Mínimo 0, Máximo 50">
+                                        
+                                        <f:validateLongRange minimum="0" maximum="50" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="printLabelAdjustment"/>
+                                    <label for="printLabelAdjustment">Ajuste última etiqueta</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="gapLabelAdjustment"
+                                        value = "#{catAppConfigBean.appConfig.gapLabelAdjustment}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="Mínimo 0, Máximo 50">
+                                        
+                                        <f:validateLongRange minimum="0" maximum="50" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="gapLabelAdjustment"/>
+                                    <label for="gapLabelAdjustment">Espacio entre etiquetas</label>
+                                </div> 
+                                        
+                                        
+                                    </div>
+                                    
+                                    <h6>Devoluciones</h6>
+                                    <div class="row">
+                                        <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="refundPercentage"
+                                        value = "#{catAppConfigBean.appConfig.refundPercentage}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}">
+
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="refundPercentage"/>
+                                    <label for="field3">Descuento devolución efectivo</label>
+                                </div>
+                                    </div>
+
+                                    <div class="row">
+                                         <div class="col s12 m6 l6">
+                                    <p:commandLink styleClass="waves-effect waves-light btn"              
+                                                   action ="#{catAppConfigBean.callMerge()}"
+                                                   oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                                   style="width:100%; text-decoration: none;
+                                                   color:white"
+                                                   update=" searchForm finishedProcessPanel"
+                                                   >                       
+                                        <i class="icofont-save icofont-flip-horizontal"/> Guardar
+                                    </p:commandLink>
+                                </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </h:form>
+
+
+               
+
+
+                <div id="answerModal" class="modal">
+                    <h:panelGroup id="finishedProcessPanel">
+                        <div class="modal-content center-align black-text">
+                            <h5>#{bundle['modal.updtcreate.confirm']}</h5>
+
+                            <h6>#{catAppConfigBean.answerMessage}</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row" style="width: 99%; margin-left: 0px">
+                                <div class="col s12 m6 l6 offset-m3 offset-l3">
+                                    <a class="modal-action modal-close waves-effect waves-light btn"
+                                       style="width: 100%;
+                                       text-decoration: none; color:white">Aceptar</a>  
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+                   
+                   
+                            <script>
+     initModal();
+    function initModal(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('.modal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: .5, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}
+initProcessing();
+    function initProcessing(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#processing').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: .5, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

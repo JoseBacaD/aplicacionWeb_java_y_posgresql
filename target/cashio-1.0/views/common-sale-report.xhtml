@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+
+            <ui:define name="content">
+                 <f:metadata>
+                     <f:event type="preRenderView" listener="#{commonSaleReportBean.onPageLoad}"/>
+      </f:metadata>
+                
+                <h:form id="selectForm">
+                    <div class="card">
+                        <div class="card-content">
+                            <h5><i class="icofont-papers"/>Reportes Frecuentes</h5>
+                            
+                            <div class="row">
+                                          <div class="col s12 m4 l4 input-field ">
+                                           
+                                              <h:selectOneMenu value="#{commonSaleReportBean.idReport}"
+                                                               id="reportSelect">    
+                                                 
+                                                <f:selectItem itemLabel="Venta global" itemValue="1"/>
+                                                <f:selectItem itemLabel="Faltantes" itemValue="2"/>
+                                               
+                                                  
+                                               
+                                            </h:selectOneMenu>  
+                                             <label  for="reportSelect" >seleccionar reporte</label>
+           
+                                        </div>
+                                
+                                <div class="col s16 m2 l2 input-field" >
+                                                     <p:commandLink id="printDaily" 
+                                                                    styleClass=""
+                                                                   actionListener="#{commonSaleReportBean.callMainProcess}" >
+                                                                    
+                                                        
+                                            <i class="fas fa-print fa-2x light-blue-text text-darken-4" style="margin-top: 5px"></i>
+                                           <p:resetInput target="selectForm" />
+                                        </p:commandLink>
+                                                 
+                                                 </div>
+                                
+                                    </div>
+                        </div>
+                    </div>
+                
+                
+                
+                </h:form>
+                
+                <script>
+                  function popupWindow(url, title) {      
+                    window.open(url , title);        
+                   }     
+                    
+                </script>
+
+                
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

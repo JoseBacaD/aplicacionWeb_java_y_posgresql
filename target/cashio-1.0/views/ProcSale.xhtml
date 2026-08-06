@@ -1,0 +1,1272 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+   
+    
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+
+            <ui:define name="content">
+                <p:ajaxStatus  onstart="$('#processing').modal('open');" onsuccess="$('#processing').modal('close');"  />
+            <f:metadata>
+                <f:event type="preRenderView" listener="#{procSaleBean.onPageLoad}" />
+      </f:metadata>
+                
+                
+                
+  <div class="row">
+    <div class="col s12">
+      <ul class="tabs">
+        <li class="tab col s3 l2"><a class="active" href="#test1">Pedido</a></li>
+        <li class="tab col s3 l3"><a class="active" href="#test2">Frecuentes</a></li>
+        <li class="tab col s3 l2"><a href="#test3">Promociones</a></li>
+        <li class="tab col s3 l2"><a href="#test4">Extras</a></li>
+        <li class="tab col s3 l3"><a href="#test5">Recientes</a></li>
+      </ul>
+    </div>
+    <div id="test1" class="col s12">
+        
+        
+        <div id="answerModal" class="modal bottom-sheet">
+                    <h:panelGroup id="finishedProcessPanel">
+                        <p:focus context="finishedProcessPanel"/>
+                        <div class="modal-content center-align black-text">
+                            <h5>#{bundle['modal.updtcreate.confirm']}</h5>
+                            <i class="#{procSaleBean.strAnsMessIcon} #{procSaleBean.strIconColor} icofont-3x"/>
+                            <h6>#{procSaleBean.answerMessage}</h6>
+                            <h6  style="margin-top: 0px"> #{procSaleBean.strSaleNumber}</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row" style="margin-bottom: 0px; width: 99%; margin-right: 0px; margin-left: 0px">
+                                <div class="col s12 m6 l6 offset-l3 offset-m3 ">
+                                   
+                                    <a class="modal-action modal-close waves-effect waves-light btn"
+                                       style="width: 100%;
+                                              text-decoration: none;
+                                              color:white">
+                                        <i class="icofont-check-alt"></i> Aceptar</a>  
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+
+          <div id="quickSearchModal" class="modal modal-fixed-footer">
+                    <h:form id="quickSearchForm">
+                    <h:panelGroup id="quickSearchPanel">
+                        <p:focus context="quickSearchPanel"/>
+                        <div class="modal-content center-align black-text">
+                            <h5>Buscar artículo</h5>
+                            
+                            <div class="row">
+                                <div class="col s8 m6 l6 offset-l3 offset-m3  input-field">
+                                            <h:inputText
+                                                
+                                                id="desc"
+                                               
+                                                converter="EmptyToNullConverter"
+                                                value = "#{procSaleBean.quickItemSearch.descItem}"
+                                                requiredMessage="#{bundle.validationmessagereguired}">
+                                                
+                                            </h:inputText>
+                                           
+                                            <h:messages class="red-text" for="desc"/>
+                                            <label for="desc" >Descripción</label> 
+
+                                </div>  
+                                <div class="col s1" >                        
+                                    <p:commandLink action="#{procSaleBean.populateQuickSearchTable()}"
+                                                           styleClass="btn waves-effect waves-light
+                                                           "
+                                                           style="text-decoration: none;
+                                                                  color: white;
+                                                                  margin-top: 20px"
+                                                           update="resultTable @form"
+
+                                                           oncomplete="updateInputs(); initSelect(); "
+                                                           >
+
+                                                <i class="icofont-search"></i>
+                                            </p:commandLink> 
+                                        </div>
+                            </div>
+                            <style type="text/css"> 
+                            .ui-paginator-pages .ui-paginator-page.ui-state-active {
+                            background-color: #880e4f;
+                              color: #fff;
+                            }
+                            </style>
+                            <div class="row" style="margin-bottom: 8px">
+                                        <div class="col s12">
+                                            <p:dataTable id="resultTable" 
+
+
+                                                         value="#{procSaleBean.objLazyList}"
+                                                         var="row"
+                                                         emptyMessage="#{bundle['resulttable.nomatchfound']}"
+                                                         selectionMode="single"
+                                                         selection="#{procSaleBean.quickItemSelected}"
+                                                         rowKey="#{row.idItem}"
+                                                         tableStyle="table-layout:auto;"
+                                                         reflow="true"
+                                                         paginator="true" rows="10"
+                                                         lazy="true"
+                                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                                         rowsPerPageTemplate="10,20,50"
+                                                         paginatorTemplate="{CurrentPageReport}
+                                                         {FirstPageLink}
+                                                         {PreviousPageLink}
+                                                         {PageLinks}
+                                                         {NextPageLink}
+                                                         {LastPageLink}
+                                                         {RowsPerPageDropdown}">       
+                                                <p:ajax event="rowSelect" listener="#{procSaleBean.onRowSelect}" 
+                                                        update="searchForm tableForm"
+                                                        oncomplete="updateInputs(); initSelect();"
+                                                        />
+                                                        
+                                                <p:column headerText="Código">      
+                                                    <h:outputText value="#{row.standardCodeItem}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Descripción">                                                   
+                                                    <h:outputText value="#{row.descItem}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Precio">
+                                                    <h:outputText value="#{row.priceSale}" />
+                                                </p:column>
+                                              
+                                            </p:dataTable>
+                                        </div>
+                                    </div>
+                           
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row" style="margin-bottom: 0px; width: 99%; margin-right: 0px; margin-left: 0px">
+                                <div class="col s12 m6 l6 offset-l3 offset-m3 ">
+                                    <p:commandLink
+                                        style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                       
+                                        styleClass="modal-action modal-close
+                                        waves-effect waves-light 
+                                        btn"
+                                        oncomplete="updateInputs(); initSelect();
+                                        $(function(){PrimeFaces.focus('quickSearchForm:desc');});"
+                                        update="searchForm @form">
+                                        <i class="icofont-close-line"/>
+                                        
+                                        Cerrar
+                                    </p:commandLink>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                        </h:form>
+                </div> 
+        
+        
+        
+        
+        
+        
+
+                <div id="CRUDModal" class="modal modal-fixed-footer" style="max-width: 500px; min-width: 240px; min-height: 550px; max-height: 550px">
+                    <h:form id="modalForm">
+                        <h:panelGroup id="panelPayment">
+                       
+                        <p:focus context="panelPayment"/>
+                        <div class="modal-content" >
+                            <h6><i class="fas fa-hand-holding-usd fa-2x"/> Procesar venta</h6>
+                            
+                            <div class="row" style="margin-bottom:  0px">
+                                <div class=" col m6 s12 input-field">
+                                    <h:inputText                                                 
+                                        id="field1"
+                                        onkeypress="if (event.keyCode === 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};" 
+                                        value = "#{procSaleBean.strCashPayment}"
+                                        
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="No válido">
+                                        
+                                        <p:ajax event="change"
+                                                listener="#{procSaleBean.calcPayment}"
+                                                        update="modalForm"
+                                                        oncomplete="updateInputs(); initSelect(); $(function(){PrimeFaces.focus('modalForm:field2');});"/>
+                                        <f:validateDoubleRange minimum="0" maximum="99999999" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field1"/>
+                                    <label for="field1">Efectivo:</label>
+                                </div>
+                                <div class=" col m6 s12  input-field">
+                                    <h:inputText                                                 
+                                        id="field2"
+                                        onkeypress="if (event.keyCode === 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};" 
+                                        value = "#{procSaleBean.strCardPayment}"
+                                        
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="No válido">
+                                        
+                                        <p:ajax event="change"
+                                                listener="#{procSaleBean.calcPayment}"
+                                                        update="modalForm"
+                                                        oncomplete="updateInputs(); initSelect(); $(function(){PrimeFaces.focus('modalForm:debit');});"/>
+                                        <f:validateDoubleRange minimum="0" maximum="99999999"  />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field2"/>
+                                    <label for="field2">Crédito:</label>
+                                </div>
+                                <div class=" col m6 s12 input-field">
+                                    <h:inputText                                                 
+                                        id="debit"
+                                        onkeypress="if (event.keyCode === 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};" 
+                                        value = "#{procSaleBean.strDebitPayment}"
+                                        
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="No válido">
+                                        
+                                        <p:ajax event="change"
+                                                listener="#{procSaleBean.calcPayment}"
+                                                        update="modalForm"
+                                                        oncomplete="updateInputs(); initSelect(); $(function(){PrimeFaces.focus('modalForm:field3');});"/>
+                                        <f:validateDoubleRange minimum="0" maximum="99999999"  />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field2"/>
+                                    <label for="field2">Débito:</label>
+                                </div>
+                                <div class=" col m6 s12  input-field">
+                                    <h:inputText                                                 
+                                        id="field3"
+                                        onkeypress="if (event.keyCode === 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};" 
+                                        value = "#{procSaleBean.strOtherPayment}"
+                                       
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="No válido">
+                                       
+                                        <p:ajax event="change"
+                                                listener="#{procSaleBean.calcPayment}"
+                                                        update="modalForm"
+                                                        oncomplete="updateInputs(); initSelect(); $(function(){PrimeFaces.focus('modalForm:saleComment');});"/>
+                                        <f:validateDoubleRange minimum="0" maximum="99999999" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field3"/>
+                                    <label for="field3">Dolares: ($#{procSaleBean.appConfig.rateSale})</label>
+                                </div>
+                                <div class=" col m6 s12 input-field">
+                                    <h:inputText                                                 
+                                        id="saleComment"
+                                        value = "#{procSaleBean.wrapper.saleHeader.saleHeadEntity.comment}"
+                                        validatorMessage="Máximo 50 caracteres">
+                                        <p:ajax event="change"
+                                                listener="#{procSaleBean.calcPayment}"
+                                                        update="modalForm"
+                                                        oncomplete="updateInputs(); initSelect(); $(function(){PrimeFaces.focus('modalForm:cbInvoice');}); "/>
+                                        <f:validateLength maximum="50" />
+                                        </h:inputText>
+                                    <h:messages class="red-text" for="saleComment"/>
+                                    <label for="saleComment">Comentario (max 50)</label>
+                                </div>
+                                
+                                <div class=" col s12 l6 m6 ">
+                                 <label  for="filter12" >Factura</label> 
+                                    <div class="switch">
+                                <label>
+                                  No
+                                  <h:selectBooleanCheckbox id="cbInvoice" value="#{procSaleBean.wrapper.saleHeader.saleHeadEntity.hasISRInvoice}"></h:selectBooleanCheckbox>
+                                  <span class="lever"></span>
+                                  Si
+                                </label>
+                                    </div>    
+                                        
+                              </div> 
+                                
+                                
+                                
+                                
+                                </div>
+                                <div class="row">
+                                        <div class="col s12 ">
+                                            <h6 style="margin-top: 2px; margin-bottom: 0px; font-size: 15px; ">Total: $#{procSaleBean.strTotal}</h6>
+                                            <h6 style="margin-top: 2px; margin-bottom: 2px; font-size: 15px; " class="">Pago: $#{procSaleBean.strPayment}</h6>
+                                            <h6 style="margin-top: 2px; margin-bottom: 2px; font-size: 15px; " class="">Por pagar: $#{procSaleBean.strPayableAmount}</h6>
+                                           
+                                            <h6 style="margin-top: 2px; margin-bottom: 0px; font-size: 15px; ">Cambio: $#{procSaleBean.strChange}</h6>
+                                        </div>
+                                    </div>
+                                    
+                            <div class="modal-fixed-footer" style="max-width: 450px; min-width: 210px; width: 90%; height: 60px">
+                            
+                                <div class="col s6 l6 m6">
+                                    <p:commandLink styleClass="waves-effect waves-light btn"              
+                                                   actionListener="#{procSaleBean.callMainProcess()}"
+                                                   oncomplete="updateInputs();  initCollapsible(); initTabs(); initSelect();"
+                                                   style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                                
+                                                   update="modalForm searchForm tableForm finishedProcessPanel recentPanel "
+                                                   >                     
+                                        <i class="icofont-check-alt"></i> Aceptar
+                                    </p:commandLink>
+                                </div>
+                           
+                            
+                            
+                                <div class="col s6 l6 m6">
+                                
+                                    <p:commandLink
+                                        style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                       
+                                        styleClass="modal-action modal-close
+                                        waves-effect waves-light 
+                                        btn"
+                                        oncomplete="updateInputs(); initSelect();"
+                                        update="searchForm @form">
+                                        <i class="icofont-close-line"/>
+                                        Cancelar
+                                    </p:commandLink>
+                                
+                                </div>
+                             
+                            </div>
+                              
+                        </div>
+                        
+                        </h:panelGroup>
+
+                    </h:form>
+                </div>
+                        
+        
+        
+        
+        
+            <div id="withdrawModal" class="modal modal-fixed-footer" style="max-width: 500px; min-width: 240px; min-height: 350px; max-height: 350px">
+                    <h:form id="withdrawModalForm">
+                        <h:panelGroup id="panelWithdraw">
+                       
+                        <p:focus context="panelWithdraw"/>
+                        <div class="modal-content" >
+                            <h6><i class="icofont-dollar-minus icofont-2x"/> Procesar retiro</h6>
+                            
+                            <div class="row" style="margin-bottom:  0px">
+                                <div class=" col s4 input-field">
+                                    <h:inputText                                                 
+                                        id="withdrawQty"
+                                        value = "#{procSaleBean.wrapper.saleHeader.saleHeadEntity.cashWithdraw}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="No válido">
+                                        <f:validateDoubleRange minimum="0" maximum="99999999" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="withdrawQty"/>
+                                    <label for="withdrawQty">Monto</label>
+                                </div>
+                                <div class=" col s8  input-field">
+                                    <h:inputText                                                 
+                                        id="withdrawComment"
+                                        value = "#{procSaleBean.wrapper.saleHeader.saleHeadEntity.comment}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        validatorMessage="Máximo 50 caracteres">
+                                        
+                                        <f:validateLength maximum="50" />
+                                        
+                                        </h:inputText>
+                                    <h:messages class="red-text" for="withdrawComment"/>
+                                    <label for="withdrawComment">Motivo</label>
+                                </div>
+                                
+                                </div>
+                               
+                                    
+                            <div class="modal-footer" style="max-width: 450px; min-width: 210px; width: 90%; height: 60px">
+                            
+                                <div class="col s6 l6 m6">
+                                    <p:commandLink styleClass="waves-effect waves-light btn"              
+                                                   actionListener="#{procSaleBean.callProcessWithdraw}"
+                                                   oncomplete="updateInputs();  initCollapsible(); initTabs(); initSelect(); "
+                                                   style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                                
+                                                   update="withdrawModalForm searchForm tableForm finishedProcessPanel recentPanel @form "
+                                                   >                     
+                                        <i class="icofont-check-alt"></i> Aceptar
+                                    </p:commandLink>
+                                </div>
+                           
+                            
+                            
+                                <div class="col s6 l6 m6">
+                                
+                                    <p:commandLink
+                                        style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                                  
+                                        styleClass="modal-action modal-close
+                                        waves-effect waves-light 
+                                        btn"
+                                        oncomplete="updateInputs(); initSelect();"
+                                        update="searchForm">
+                                        <i class="icofont-close-line"/>
+                                        <p:focus context="searchForm"/>
+                                        Cancelar
+                                    </p:commandLink>
+                                
+                                </div>
+                            
+                            </div>
+                            
+                        </div>
+                        
+                        </h:panelGroup>
+
+                    </h:form>
+                </div>
+        
+        
+        
+        
+                    <div class="row" style="margin-bottom: 0px;" >
+                        <div class="col s12">
+                            <div class="card" style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <h5 style="margin-top: 0px"><i class="fas fa-cash-register"/> Ventas</h5>
+
+                                    <h:form id="searchForm" >
+                    <h:panelGroup id="panel">   
+                        <p:focus context="panel"/>
+                        <div class="row" style="margin-bottom: 0px" >
+                                        <div class="col s12 m8 l8">
+                                    <h6  class=""><i class="fa fa-plus "/> Agregar artículo</h6>
+                                    
+                                        </div>
+                                        
+                                        <div class="col s12 m5 l5 input-field" >
+                                            <p:inputText
+                                                
+                                                id="filter2"
+                                                required="true"
+                                                value="#{procSaleBean.wrapper.itemSearch.itemEntity.standardCodeItem}"
+                                                onkeypress="if (event.keyCode === 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};" 
+                                                >
+                                                <p:ajax event="change"
+                                                        listener="#{procSaleBean.callSearchItem}"
+                                                        update="tableForm @form modalForm"
+                                                        oncomplete="updateInputs(); initSelect();"/>
+                                            </p:inputText>
+                                            <label  for="filter2" >#{bundle['procsale.field.itemcode']}</label>
+                                            
+                                        </div>
+                                        
+                                         <div class="col s12 m1 l1 input-field" >
+                                            <p:inputText
+                                                value="#{procSaleBean.wrapper.quantity}"
+                                                id="filter1"
+                                                required="true"
+                                                onkeypress="if (event.keyCode === 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"
+                                                >
+                                                <f:validateLongRange minimum="0" />
+                                                <p:ajax event="change"
+                                                        
+                                                        update="tableForm @form"
+                                                        oncomplete="updateInputs(); initSelect();"/>
+                                            </p:inputText>
+
+                                            
+                                            <label  for="filter1" >#{bundle['procsale.field.quantity']}</label> 
+                                        </div>
+                            
+                                        <div class="col s12 m6 l6 hide-on-med-and-up">
+                                                          
+                                                <p:commandLink
+                                                           styleClass="waves-effect waves-light btn"
+                                                           style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                           update="tableForm modalForm"
+                                                           onsuccess="$('#CRUDModal').modal('open');"
+                                                           oncomplete="updateInputs(); initSelect();
+                                                           "
+                                                           >
+                                                    <p:focus for="modalForm:panelPayment"/>
+                                                    <i class= "fas fa-hand-holding-usd"></i>
+                                                Venta
+                                                
+                                            </p:commandLink> 
+                                        
+                                            </div>
+                                
+                            <h:panelGroup id="panelTotals">
+                            <div class="col s12 m5 l5 right-align" style="margin-bottom: 50px;">
+                                                
+                                            
+                                            <h5 class="right-align" style="margin-top: 0px">Total: $#{procSaleBean.strTotal}</h5>
+                                        </div>
+                            </h:panelGroup>
+                            
+                                         <div class="col s12 m6 l6 hide-on-small-and-down">
+                                                          
+                                                <p:commandLink
+                                                           styleClass="waves-effect waves-light btn"
+                                                           style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                           update="tableForm @form modalForm"
+                                                           onsuccess="$('#CRUDModal').modal('open');"
+                                                           oncomplete="updateInputs();initSelect();  
+                                                           "
+                                                           >
+                                                    <p:focus for="modalForm:panelPayment"/>
+                                                    <i class= "fas fa-hand-holding-usd"></i>
+                                                Venta
+                                                
+                                            </p:commandLink> 
+                                        
+                                            </div>
+                            </div>
+                        
+                        
+                        
+                        
+                        
+                       
+  
+                        <div class="hide-on-med-and-up">   
+                            
+          <p:commandLink
+                   
+                   styleClass="waves-effect
+                   waves-light
+                   black-text
+                   btn-floating
+                  
+                   modal-trigger"
+                   id="btnquickSearchLarge"
+                   onclick="$('#quickSearchModal').modal('open');"
+                  
+                   update="tableForm quickSearchForm"
+                   oncomplete="updateInputs(); initSelect(); $(function(){PrimeFaces.focus('quickSearchForm:desc');});  "
+                   style="position: absolute;
+                                          top: 320px;
+                                          right: 73%;">
+
+        <i class="icofont-search-1 icofont-1x icofont-flip-horizontal"></i>
+        </p:commandLink> 
+        <p:focus for="quickSearchForm:quickSearchPanel"/>
+        <p:tooltip for="btnquickSearchLarge" value="Buscar artículos" position="top"/>
+   
+   
+
+    
+     <p:commandLink styleClass= "waves-effect
+                   waves-light
+                   black-text
+                   btn-floating
+                   
+                   modal-trigger"
+                   id="btnWithdrawLarge"
+                   onclick="$('#withdrawModal').modal('open');"
+                   update="tableForm @form"
+                   oncomplete="updateInputs();  "
+                   style="position: absolute;
+                                          top: 320px;
+                                          right: 57%;
+                                            "
+                   >
+                   <p:focus for="withdrawModalForm:panelWithdraw"/>
+        <i class="icofont-dollar-minus"></i>
+        </p:commandLink> 
+        <p:tooltip for="btnWithdrawLarge" value="Retiro efectivo" position="top"/>
+        
+    
+        
+        
+        
+        </div>
+    
+                        
+                        <div class="hide-on-small-and-down">
+        
+  
+                            <p:commandLink styleClass="waves-effect
+               waves-light
+               black-text
+               btn-floating
+
+               modal-trigger"
+               onclick="$('#quickSearchModal').modal('open');"
+               update="tableForm finishedProcessPanel quickSearchForm" 
+               oncomplete="updateInputs(); initSelect(); $(function(){PrimeFaces.focus('quickSearchForm:desc');}); "
+               style="position: absolute;
+                                          top: 180px;
+                                          right: 41%">
+
+    <i class="icofont-search-1 icofont-1x icofont-flip-horizontal"></i>
+                            </p:commandLink>
+   
+
+    
+        
+     
+                            
+                            <p:commandLink styleClass="waves-effect
+                   waves-light
+                   black-text
+                   btn-floating
+
+                   modal-trigger"
+                  onclick="$('#withdrawModal').modal('open');"
+                   update="tableForm @form"
+                   oncomplete="updateInputs(); initSelect(); "
+                   style="position: absolute;
+                                          top: 180px;
+                                          right: 33%;
+                                            " >
+
+        <i class="icofont-dollar-minus"></i>
+        </p:commandLink> 
+   
+    </div>
+ 
+        
+                                   
+                                    
+                            </h:panelGroup>
+                </h:form>
+                               
+                <h:form id="tableForm"  >
+                    
+                    <div class="row">   
+                        <div class="col s12">
+                            
+                                
+                               
+                                     <h6>
+                                            <i class="fa fa-shopping-cart fa-flip-horizontal"></i> 
+                                            Lista de artículos
+                                        </h6>
+                            <div class="row hide-on-small-and-down"
+                                 style="margin-bottom: 0px;">
+                                <div class="col s2  ">
+                                     Cant.
+                                </div>
+                                <div class="col s7 " style="padding-left: 0px">
+                                    Desc.
+                                </div>
+                              
+                                <div class="col s2 l2 m2 offset-l1">
+                                    Precio
+                                </div>
+                            </div>
+                            
+                              
+                            <!--vista mediana y grande-->
+                            <div class=" hide-on-small-and-down">
+                                <ui:repeat value="#{procSaleBean.wrapper.saleHeader.saleHeadEntity.folioCollection}" var="item">
+                                    
+                                    <p:commandLink  styleClass=" btn" style="height: 45px; width: 100%; text-decoration: none;
+                                                                  padding-left: 0px; padding-right: 0px;
+                                                                  color:white"
+                                        onkeypress="if (event.keyCode === 68) {event.target.blur();event.stopPropagation();return false;} else {return true;};"
+                                                  >
+                                    <div class="row">
+                                    <div class="col s12 left-align hide-on-small-and-down" >
+                                      
+                                        <table class="">
+                                            <tbody>
+                                                
+                                                <tr>
+                                                <td style="width:6%; padding-bottom: 6px; padding-top: 0px">
+                                                      <span style="font-size: small;"> #{item.quantity}</span>
+                                               </td>
+                                                    
+
+                                                    <td  style="width:25%; padding-bottom: 6px; padding-top: 0px">
+                                                        <span style="font-size: small">#{item.standardCodeItem.descItem}</span> 
+                                                        
+                                               </td>
+                                                    
+                                                    <td class="right-align" style="width:15%; padding-bottom: 6px; padding-top: 0px">
+                                                          <span style="font-size: small">$ #{item.priceDetail}</span> |  <i class="icofont-ui-delete"></i><i class="icofont-hand-drag1 icofont-flip-horizontal"></i>
+                                        
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h6 class="left-align hide-on-med-and-up">#{item.quantity} #{item.standardCodeItem.shortDescItem} #{item.standardCodeItem.standardCodeItem}</h6>
+                                        
+                                    </div>
+                                        
+                                  
+                                    </div>
+                                      <p:ajax
+                                              listener="#{procSaleBean.callDeleteItem(item)}" 
+                                                        update="tableForm @form modalForm searchForm "
+                                                        oncomplete="updateInputs(); initSelect(); "/>
+                                      
+                                       
+                                </p:commandLink>
+                                    </ui:repeat>
+                                
+                                </div>
+                            
+                            
+                                    <!--vista pequeña-->
+                                    <div class="hide-on-med-and-up"> 
+                                        <ui:repeat value="#{procSaleBean.wrapper.saleHeader.saleHeadEntity.folioCollection}" var="item">
+                                  <p:commandLink styleClass=" btn" style="height: 100px; width: 100%; text-decoration: none;
+                                                                  padding-left: 5px; padding-right: 0px;
+                                                                  color:white"
+                                  onkeypress="if (event.keyCode === 68) {event.target.blur();event.stopPropagation();return false;} else {return true;};">
+                                    <div class="row">
+                                        <div class="col s8" style=" padding-right: 0px" >
+                                        
+                                        <p class="left-align hide-on-med-and-up" style="line-height: 1.2; margin-top: 5px;">
+                                            <span class="blue-grey-text text-lighten-4" style="font-size: xx-small;">Cant: </span>#{item.quantity}<br></br>
+                                            <span class="blue-grey-text text-lighten-4" style="font-size: xx-small;">Desc: </span>#{item.standardCodeItem.shortDescItem} <br></br>
+                                            <span class="blue-grey-text text-lighten-4" style="font-size: 8px;">Código: </span>#{item.standardCodeItem.standardCodeItem}
+                                        </p>
+                                        
+                                    </div>
+                                        
+                                        <div class="col s4 " style="padding-left: 0px">
+                                        <h6 class="right-align"><i class="icofont-ui-delete"></i><i class="icofont-hand-drag1 icofont-flip-horizontal"></i></h6>
+                                        <p class="right-align"> 
+                                            <span class="blue-grey-text text-lighten-4">$</span>#{item.priceDetail}
+                                        </p>
+
+                                        
+                                    </div>
+                                    </div>
+                                      <p:ajax
+                                              listener="#{procSaleBean.callDeleteItem(item)}"
+                                                        update="tableForm @form searchForm"
+                                                        oncomplete="updateInputs(); initSelect();"/>
+                                </p:commandLink>
+                                    </ui:repeat>
+                                
+                                </div>
+                   
+                            </div>
+                        
+                        
+                </div>
+                 
+                </h:form>
+                                    
+                                     </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    </div>
+      <div id="test2" class="col  s12" >
+          <div class="card " style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                   
+                                    <div class="row">
+                                        <div class="col l12 hide-on-med-and-down">
+                                    <ui:repeat value="#{procSaleBean.liFrecItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px;
+                                                                       width: 24%;
+                                                                       margin-right: 5px;
+                                                                       margin-bottom: 5px;
+                                                                       padding-left: 3%;
+                                                                       text-decoration: none;
+                                                                       color: white;
+                                                                       line-height: 1.2;
+                                                                       padding-top: 5px;
+                                                                       line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 5px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}" > </i>
+                                    <div class="row">
+                                        
+                                        <p>
+                                            #{frecItem.standardCodeItem.descItem}<br></br>
+                                            $#{frecItem.standardCodeItem.priceSale}
+                                             </p>
+                                    </div>
+                                        <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm modalForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect(); "/>
+                                    </p:commandLink>
+                                        
+                                    </ui:repeat>
+                                       </div>
+                                        <div class="col s12 hide-on-large-only hide-on-small-and-down ">
+                                    <ui:repeat value="#{procSaleBean.liFrecItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px; 
+                                                                               width: 32%;
+                                                                               margin-right: 5px;
+                                                                               margin-bottom: 5px;
+                                                                               padding-left: 3%;
+                                                                               text-decoration: none;
+                                                                               color: white;
+                                                                               line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 5px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}" > </i>
+                                    <div class="row">
+                                        <p>
+                                            #{frecItem.standardCodeItem.descItem} <br></br>
+                                            $#{frecItem.standardCodeItem.priceSale}
+                                           
+                                        </p>
+                                    </div>
+                                        <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect(); "/>
+                                    </p:commandLink>
+                                        
+                                    </ui:repeat>
+                                       </div>
+                                        
+                                        <div class="col s12 show-on-small hide-on-med-and-up">
+                                    <ui:repeat value="#{procSaleBean.liFrecItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px;
+                                                                       width: 49%;
+                                                                       margin-right: 2px;
+                                                                       margin-bottom: 5px;
+                                                                       padding-left: 3%; 
+                                                                       text-decoration: none;
+                                                                       color: white;
+                                                                       line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 5px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}"/>
+                                        <div class="row">
+                                            
+                                                <p>
+                                       
+                                            #{frecItem.standardCodeItem.shortDescItem}<br></br>
+                                            $#{frecItem.standardCodeItem.priceSale}
+                                            
+                                            </p>
+                                           
+                                            </div>
+                                            <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect();"/>
+                                    </p:commandLink>
+                                        
+                                    </ui:repeat>
+                                       </div>
+                                     </div>
+                                </div>
+          </div>
+          
+      </div>
+      <div id="test3" class="col s12">
+          <div class="card " style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <div class="row">
+                                        <div class="col s12 hide-on-med-and-down">
+                                    <ui:repeat value="#{procSaleBean.liPromoItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px;
+                                                                       width: 24%;
+                                                                       margin-right: 5px;
+                                                                       margin-bottom: 5px;
+                                                                       padding-left: 3%;
+                                                                       text-decoration: none;
+                                                                       color: white;
+                                                                       line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 8px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}" > </i>
+                                    <div class="row">
+                                        <p>#{frecItem.standardCodeItem.descItem}<br></br>
+                                            $#{frecItem.standardCodeItem.priceSale}
+                                        
+                                        </p>
+                                    </div>
+                                        <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect(); "/>
+                                </p:commandLink>
+                                    </ui:repeat>
+                                    </div>
+                                        <div class="col s12 hide-on-large-only hide-on-small-and-down ">
+                                    <ui:repeat value="#{procSaleBean.liPromoItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px;
+                                                                       width: 32%;
+                                                                       margin-right: 5px;
+                                                                       margin-bottom: 5px;
+                                                                       padding-left: 3%;
+                                                                       text-decoration: none;
+                                                                       color: white;
+                                                                       line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 8px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}" > </i>
+                                    <div class="row">
+                                        <p>
+                                            #{frecItem.standardCodeItem.descItem}<br></br>
+                                            $#{frecItem.standardCodeItem.priceSale}
+                                          
+                                        </p>
+                                    </div>
+                                        <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect(); "/>
+                                    </p:commandLink>
+                                        
+                                    </ui:repeat>
+                                       </div>
+                                        
+                                        <div class="col s12 show-on-small hide-on-med-and-up">
+                                    <ui:repeat value="#{procSaleBean.liPromoItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px;
+                                                                       width: 49%;
+                                                                       margin-right: 2px;
+                                                                       margin-bottom: 5px;
+                                                                       padding-left: 2%;
+                                                                       text-decoration: none;
+                                                                       color: white;
+                                                                       line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 8px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}" > </i>
+                                    <div class="row">
+                                        <p>
+                                            #{frecItem.standardCodeItem.shortDescItem}<br></br>
+                                            $#{frecItem.standardCodeItem.priceSale}
+                                         
+                                        </p>
+                                    </div>
+                                        <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect();"/>
+                                    </p:commandLink>
+                                        
+                                    </ui:repeat>
+                                       </div>
+                                  </div>
+                                </div>
+          </div>
+      </div>
+      <div id="test4" class="col s12">
+          <div class="card " style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <div class="row">
+                                        <div class="col s12 hide-on-med-and-down">
+                                            <ui:repeat value="#{procSaleBean.liExtraItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px;
+                                                                       width: 24%;
+                                                                       margin-right: 5px;
+                                                                       margin-bottom: 5px;
+                                                                       padding-left: 3%;
+                                                                       text-decoration: none;
+                                                                       color: white;
+                                                                       line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 8px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}" > </i>
+                                    <div class="row">
+                                        <p>
+                                            #{frecItem.standardCodeItem.descItem}
+                                            $#{frecItem.standardCodeItem.priceSale}<br></br>
+                                        </p>
+                                    </div>
+                                        <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect();"/>
+                                </p:commandLink>
+                                    </ui:repeat>
+                                    </div>
+                                        <div class="col s12 hide-on-large-only hide-on-small-and-down ">
+                                    <ui:repeat value="#{procSaleBean.liExtraItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px;
+                                                                       width: 32%;
+                                                                       margin-right: 5px;
+                                                                       margin-bottom: 5px;
+                                                                       padding-left: 3%;
+                                                                       text-decoration: none;
+                                                                       color: white;
+                                                                       line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 8px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}" > </i>
+                                    <div class="row">
+                                        <p>
+                                            #{frecItem.standardCodeItem.descItem}
+                                            $#{frecItem.standardCodeItem.priceSale}<br></br>
+                                        </p>
+                                    </div>
+                                        <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect(); "/>
+                                    </p:commandLink>
+                                        
+                                    </ui:repeat>
+                                       </div>
+                                        
+                                        <div class="col s12 show-on-small hide-on-med-and-up">
+                                    <ui:repeat value="#{procSaleBean.liExtraItem}" var="frecItem">
+                                    <p:commandLink  styleClass="collection-item btn dismissable"
+                                                                style="height: 130px;
+                                                                       width: 49%;
+                                                                       margin-right: 2px;
+                                                                       margin-bottom: 5px;
+                                                                       padding-left: 2%;
+                                                                       text-decoration: none;
+                                                                       color: white;
+                                                                       line-height: 1.2;
+                                                                               padding-top: 5px;
+                                                                               padding-left: 5px;">
+                                        <i class="#{frecItem.standardCodeItem.iconItemName}" > </i>
+                                    <div class="row">
+                                        <p>
+                                            #{frecItem.standardCodeItem.shortDescItem}
+                                            $#{frecItem.standardCodeItem.priceSale}<br></br>
+                                        </p>
+                                    </div>
+                                        <p:ajax
+                                            listener="#{procSaleBean.addFrecuentItem(frecItem)}"
+                                                        update="tableForm searchForm"
+                                                        oncomplete="updateInputs(); initSelect(); "/>
+                                    </p:commandLink>
+                                        
+                                    </ui:repeat>
+                                       </div>
+                                    </div>
+                                </div>
+          </div>
+      </div>
+      
+      
+      <h:panelGroup id="recentPanel">
+      <div id="test5" class="col s12">
+       
+           <div class="card" style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    
+                                    
+   <ul class="collapsible">
+       
+       <ui:repeat value="#{procSaleBean.liOrders}" var="recentOrder">
+    <li>
+        <div class="collapsible-header">
+            <div class="row" style="margin-bottom: 0px">
+                <div class="col s2" >
+                    <p:commandLink styleClass="waves-effect waves-light right-align"              
+                           actionListener="#{procSaleBean.removeRecentOrder(recentOrder)}"
+                                                   oncomplete="updateInputs();  initCollapsible(); initTabs(); initSelect(); "
+                                                   style=" text-decoration: none;
+                                                                  color: red;
+                                                                  width: 23px"
+                                                                
+                                                   update="modalForm searchForm tableForm finishedProcessPanel recentPanel"
+                                                   >                     
+                                        <i class="icofont-ui-delete"></i>
+                                    </p:commandLink>
+                </div>
+                
+                <div class="col s10">
+                    Venta No. #{recentOrder.folio} #{recentOrder.recentSaleComment}
+                </div>
+            </div> 
+            
+           
+            
+            
+            
+           
+            
+        </div>
+    
+       
+      <div class="collapsible-body">
+          <span class="black-text">
+     
+              <ui:repeat value="#{recentOrder.itemRecentList}"  var="receItem">
+                  <p>#{receItem.quantity} #{receItem.description} <br></br> </p>
+              </ui:repeat>
+          </span>
+     </div>
+    </li>
+            </ui:repeat>                               
+    
+  </ul>
+   
+                                    
+                                </div>
+                            </div>
+          
+          
+      </div>
+          
+             </h:panelGroup>
+  </div>
+    
+             
+                
+              
+      
+            <script>
+              
+              
+    initFloatingRight();
+    function initFloatingRight(){
+        
+                $(document).ready(function(){
+    $('.fixed-action-btn').floatingActionButton({
+        direction: 'right'
+    });
+  });
+  
+    }
+    
+   
+    
+     document.onkeypress = processKey; 
+function processKey(e)
+{
+
+    if (null === e)
+        e = window.event ;
+    if (e.keyCode === 124)  {
+        $('#quickSearchModal').modal('open');
+        $(function(){PrimeFaces.focus('quickSearchForm:desc');});
+        
+        return false;
+    }
+    if (e.keyCode === 176)  {
+        $('#CRUDModal').modal('open');
+        $(function(){PrimeFaces.focus('modalForm:field1');});
+        
+        return false;
+    }
+}
+
+  $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#quickSearchModal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+  
+  $('#answerModal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+  
+  
+    $('.modal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+  
+            });
+       
+    function initProcessing(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#processing').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}
+
+function popupWindow(url, title) {      
+    window.open(url , title);        
+}    
+
+function downloadTicket(uri, name) 
+{
+    var link = document.createElement("a");
+    // If you don't know the name or want to use
+    // the webserver default set name = ''
+    link.setAttribute('download', name);
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+initCollapsible();
+function initCollapsible(){
+   
+$(document).ready(function(){
+    $('.collapsible').collapsible();
+  });
+}
+  
+  
+  function initTabs(){
+      $(document).ready(function(){
+    $('.tabs').tabs();
+  });
+  }
+  
+  window.onload = function() {
+    document.getElementById('searchForm:filter2').focus();
+}
+
+
+</script> 
+            </ui:define>
+
+        </ui:composition>
+   
+    </body>
+    
+</html>
+
+            

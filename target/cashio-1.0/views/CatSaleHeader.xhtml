@@ -1,0 +1,312 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+
+            <ui:define name="content">
+                 <f:metadata>
+                     <f:event type="preRenderView" listener="#{catSaleHeaderBean.onPageLoad}"/>
+                        </f:metadata>
+                
+                  
+                      <p:ajaxStatus  onstart="$('#processing').modal('open');" onsuccess="$('#processing').modal('close');" />
+
+
+                      <h:form id="searchForm">
+                    <h:panelGroup id="panelSearch">
+                        <p:focus context="panelSearch" />
+                    <div class="row" style="margin-bottom: 0px;" >
+                        <div class="col s12">
+                            <div class="card hoverable " style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <h5 style="margin-top: 0px"><i class="icofont-papers"/> Reporte ventas resumen</h5>
+
+                                    <div class="row">
+                                              <div class="col s12 m4 l3 input-field">
+                                                  <p:inputMask id="field3"
+                                                               mask="9999/99/99"
+                                                               styleClass="datepicker"
+                                                               value="#{catSaleHeaderBean.saleHeadExt.abstractField1.dateIniValue}" 
+                                                               converterMessage="Fecha inválida"
+                                                               converter="EmptyToNullConverter">
+                                                      <f:convertDateTime pattern="yyyy/MM/dd" />
+                                                    </p:inputMask>
+                                          <p:watermark  value="AAAA/MM/DD" for="field3" />
+                                          <h:messages class="red-text" for="field3"/>
+                                          <label for="field3">Fecha venta inicio</label>
+                                        </div>
+                                        
+                                        <div class="col s12 m4 l3 input-field">
+                                           <p:inputMask id="field4"
+                                                        mask="9999/99/99"
+                                                        styleClass="datepicker"
+                                                        value="#{catSaleHeaderBean.saleHeadExt.abstractField1.dateEndValue}" 
+                                                        converterMessage="Fecha inválida"
+                                                        converter="EmptyToNullConverter"
+                                                        >
+                                                        
+                                               <f:convertDateTime pattern="yyyy/MM/dd" />
+                                         </p:inputMask>
+                                          <p:watermark  value="AAAA/MM/DD" for="field4" />
+                                          <h:messages class="red-text" for="field4"/>
+                                          <label for="field7">Fecha venta final</label>
+                                        </div>
+                                        
+                                         <div class=" col s12 l6 m6 ">
+                                 <label  for="includWithdraw" >Solo retiros </label> 
+                                    
+                                 
+                                  <p:selectBooleanCheckbox value="#{catSaleHeaderBean.saleHeadExt.saleHeadEntity.isWithdraw}"></p:selectBooleanCheckbox>
+                                  <span class="lever"></span>
+                                 
+                              </div>
+                                        </div>
+                                   
+                                    
+                                    
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-l4 offset-m4 " >                        
+                                            <p:commandLink action="#{catSaleHeaderBean.populateTable}"
+                                                           styleClass="btn waves-effect waves-light"
+                                                           style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                           update="tableForm @form"
+                                                           
+                                                           ajax="true"
+                                                           oncomplete="updateInputs();
+                                                                       initDatepicker();
+                                                                       initSelect();"
+                                                                       >
+
+                                                <i class="icofont-search"></i> #{bundle['search.btn.search']}
+                                            </p:commandLink> 
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                 </h:panelGroup>
+                </h:form>
+
+
+                <h:form id="tableForm">
+                    <div class="row" style="margin-bottom: 0px;">
+                        <div class="col s12">
+                            <div class="card ">
+                                <div class="card-content">
+
+
+                                       <div class="col s2 offset-m10 offset-l11 offset-s10 left-align" style="margin-bottom: 5px; ">
+                                        <h:commandLink styleClass="">
+                                            <p:dataExporter type="xls" target="resultTable" fileName="reporte_ventas_resumen_#{catSaleHeaderBean.strDateToday}" pageOnly="false"/>
+                                            <i class="fas fa-file-download fa-2x light-blue-text text-darken-4"> 
+                                            </i>
+                                        </h:commandLink>
+                                       </div>
+
+
+                                    <div class="row" style="margin-bottom: 8px" >
+                                        <div class="col s12">
+                                   
+                                            <p:dataTable id="resultTable" 
+                                                         styleClass="table table-hover"
+                                                         value="#{catSaleHeaderBean.objLazyList}"
+                                                         var="row"
+                                                         emptyMessage="#{bundle['resulttable.nomatchfound']}"
+                                                         tableStyle="table-layout:auto;"
+                                                         reflow="true"
+                                                         paginator="true" rows="20"
+                                                         lazy="true"
+                                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                                         rowsPerPageTemplate="20,50,100,{ShowAll|'Todos'}"
+                                                         paginatorTemplate="{CurrentPageReport}
+                                                         {FirstPageLink}
+                                                         {PreviousPageLink}
+                                                         {PageLinks}
+                                                         {NextPageLink}
+                                                         {LastPageLink}
+                                                         {RowsPerPageDropdown}">     
+                                                
+                                                 <p:column headerText="Factura" exportable="false" >                                                    
+                                                        <p:selectBooleanCheckbox disabled="true" value="#{row.hasISRInvoice}"></p:selectBooleanCheckbox>
+                                                         <span class="lever"></span>
+                                                        
+                                                </p:column>
+   
+                                                <p:column headerText="No. folio">                                                   
+                                                    <h:outputText value="#{row.folio}" />
+                                                </p:column>
+                                                <p:column headerText="Total">
+                                                    <h:outputText value="#{row.totalSale}" />
+                                                </p:column>
+                                                <p:column headerText="Impuesto">                                                  
+                                                    <h:outputText value="#{row.taxTotal}" />
+                                                </p:column>
+                                                 
+                                                
+                                                <p:column headerText="Efectivo">                                                 
+                                                    <h:outputText value="#{row.cashPayment}" />
+                                                </p:column>
+                                               
+                                                <p:column headerText="Pago crédito">                                                 
+                                                    <h:outputText value="#{row.cardPayment}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Pago débito">                                                 
+                                                    <h:outputText value="#{row.debitPayment}" />
+                                                </p:column>
+                                                
+                                                 <p:column headerText="Pago Dolares">                                                 
+                                                    <h:outputText value="#{row.otherPayment}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Retiro">                                                 
+                                                    <h:outputText value="#{row.cashWithdraw}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Total devolución">                                                 
+                                                    <h:outputText value="#{row.cashRefund}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Fecha venta">                                                    
+                                                    <h:outputText value="#{row.saleDate}" >
+                                                        <f:convertDateTime type="date" pattern="yyyy-MM-dd HH:mm"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column headerText="Tipo de cambio">                                                  
+                                                    <h:outputText value="#{row.rateSale}" />
+                                                </p:column>
+                                                <p:column headerText="Comentarios">                                                   
+                                                    <h:outputText value="#{row.comment}" />
+                                                </p:column>
+                                                <p:column headerText="Modificado por">                                                   
+                                                    <h:outputText value="#{row.modifiedBy}" />
+                                                </p:column>
+                                                
+                                              
+
+
+                                            </p:dataTable>
+                                        </div>
+                                         </div>
+                                        
+                                    
+
+                                    <div class="row">
+                                        <div class="col s2 offset-m10 offset-l11 offset-s10" style="margin-bottom: 5px; ">
+                                        <h:commandLink styleClass="">
+                                            <p:dataExporter type="xls" target="resultTable" fileName="reporte_ventas_resumen_#{catSaleHeaderBean.strDateToday}" pageOnly="false"/>
+                                            <i class="fas fa-file-download fa-2x light-blue-text text-darken-4">
+                                            </i>
+                                        </h:commandLink>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>    
+
+
+                </h:form>
+                
+                
+                <h:panelGroup id="panelWarning">
+                    <p:focus context="panelWarning"/>
+                <div id="warningModal" class="modal">
+                    <div class="modal-content center-align black-text ">
+
+                        <h5>#{bundle['modal.delete.tittle']}</h5>
+                        <h6>#{bundle['modal.delete.question']}</h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row" style="margin-left: 2px;">
+
+                            <div class="col s12 m5 l5  offset-l1 offset-m1 center-align">
+                                <h:form  id="warningForm">
+                                    <p:commandLink style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                   action="#{catSaleHeaderBean.callDelete}"
+                                                   styleClass="btn waves-effect waves-light"
+                                                   onsuccess="$('#warningModal').modal('close'); $('#answerModal').modal('open');"
+                                                   update="tableForm @form finishedProcessPanel"
+
+
+                                                   >
+
+                                        <i class="fa fa-check"></i>    Aceptar
+                                    </p:commandLink>
+                                </h:form>
+                            </div>
+                            <div class="col s12 m5 l5 center-align">
+                                <a class="btn waves-effect waves-light modal-action modal-close" style="width: 100%;">
+                                    <i class="icofont-close-line"/>
+                                    Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                    </h:panelGroup>
+
+                <div id="answerModal" class="modal">
+                    <h:panelGroup id="finishedProcessPanel">
+                        <div class="modal-content center-align black-text">
+                            <h5>#{bundle['modal.updtcreate.confirm']}</h5>
+
+                            <h6></h6>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row" style="width: 99%; margin-left: 0px">
+                                <div class="col s12 m6 l6 offset-m3 offset-l3">
+                                    <a class="modal-action modal-close waves-effect waves-light btn" style="width: 100%;"> <i class="icofont-check-alt"></i> Aceptar</a>  
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+                    <script>
+     initModal();
+    function initModal(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#processing').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}
+                </script>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

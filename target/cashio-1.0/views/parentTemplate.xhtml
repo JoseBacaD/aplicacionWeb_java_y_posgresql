@@ -1,0 +1,458 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="/css/materialize.css"/>
+         <h:outputStylesheet name="/css/commadLinkCustom.css"/>
+        <h:outputStylesheet name="/css/custom-materialize.css"/>
+        <h:outputStylesheet name="/css/fontawesome.min.css"/>
+        <h:outputStylesheet name="/css/all.min.css"/>
+        <h:outputStylesheet name="/css/regular.min.css"/>
+        <h:outputStylesheet name="/css/solid.min.css"/>
+         <h:outputStylesheet name="/css/icofont.min.css"/> 
+        <h:outputStylesheet name="/css/svg-with-js.min.css"/>
+        <h:outputScript name="/js/materialize.js"/>
+    
+       
+        <h:outputStylesheet name="/css/custom-primefaces.css"/>
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     
+         <head>
+        
+        <title>Palidink -#{loginSession.appConfig.companyName}- </title>
+        <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/images/quill-img.ico"/>
+    </head>
+
+    </h:head>
+
+    <h:body >
+        
+        <div id="top">
+            <ui:insert name="top"></ui:insert>
+            
+            <style> 
+/*                header, main, footer {
+                    padding-left: 300px;
+                }
+                @media only screen and (max-width : 992px) {
+                    header, main, footer {
+                        padding-left: 0;
+                    }
+                }*/
+                body {
+                    display: flex;
+                    min-height: 100vh;
+                    flex-direction: column;
+                }
+
+                main {
+                    flex: 1 0 auto;
+                }
+                
+/*                html, body tbody {
+                    max-width: 100%;
+                    overflow-x: hidden;
+                    
+                }*/
+                
+                .scrollit {
+                overflow:scroll;
+                 height:100px;
+}
+/*                .radio-button-css{
+                    position: relative !important;
+                        z-index: 12;
+                         opacity: 1 !important;
+                       
+                        }*/
+
+            </style>
+
+            
+
+            <header>
+                
+                    <nav>
+                        <div class="nav-wrapper"  >   
+                            <a href="#" 
+                                   data-target="slide-out"
+                                   class="sidenav-trigger
+                                   show-on-large">
+                                    <i class="icofont-navigation-menu"></i>
+                                </a>
+                            
+                            
+                            
+                            <p:link href="#" styleClass=" center"
+                                    style=" text-decoration: none;
+                                                                  color: white;">
+                                    #{loginSession.appConfig.companyName}
+                            </p:link>
+                                
+        
+                        </div>    
+                </nav>
+            </header>   
+
+            <ul id="slide-out" class="sidenav fixed">
+                <li><div class="user-view">
+                        <div class="background blue darken-3">
+                            <h5 class=""  style="color: #d3a13b; letter-spacing: -10px; margin-left: 10px" >
+                                <i class="icofont-compass-alt-3 icofont-2x white-text"/> <span class="white-text" style="letter-spacing: 1px;">RISTRA</span>
+                                        </h5>
+                            
+                        </div>
+                       
+                        
+                           <a href="#!user"><span class="email white-text">  </span></a>
+                          <a href="#!user"><span class="email white-text">  </span></a>
+                          <a href="#!user"><span class="email white-text">  </span></a>
+                        
+                          <a href="#!user" ><span class="email white-text"><i class="icofont-ui-user"/> #{loginSession.usr.userName} </span></a>
+                      
+
+                    </div>
+                    
+                </li>
+                
+                <li>
+                    <a class="waves-effect waves-light" style="padding-left: 16px" href="Home.xhtml"><i class="icofont-home icofont-2x"></i>Menú principal</a>
+                </li>
+                
+                 <li>
+                    <ul class="collapsible collapsible-accordion">
+                        <li >
+                          <a class="collapsible-header"><i class="fas fa-cash-register fa-2x"/>Transacciones</a>
+                        <div class="collapsible-body">
+                          <ul>
+                              <ui:repeat value="#{loginSession.liTransactions}" var="transMenuOption">
+                                  <li><a href="#{transMenuOption.idMenuOption.menuOptionURL}">#{transMenuOption.idMenuOption.menuOptionName}</a></li>
+                            </ui:repeat>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                <li class="no-padding">
+                    <ul class="collapsible collapsible-accordion">
+                      <li>
+                          <a class="collapsible-header"><i class="icofont-presentation-alt icofont-2x"/>Reportes</a>
+                        <div class="collapsible-body">
+                          <ul>
+                              <ui:repeat value="#{loginSession.liReports}" var="reportMenuOption">
+                                  <li><a href="#{reportMenuOption.idMenuOption.menuOptionURL}">#{reportMenuOption.idMenuOption.menuOptionName}</a></li>
+                            </ui:repeat>    
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                <li class="no-padding">
+                    <ul class="collapsible collapsible-accordion">
+                      <li>
+                          <a class="collapsible-header"><i class="fas fa-book-open fa-2x"/>Catálogos</a>
+                        <div class="collapsible-body">
+                          <ul>
+                              <ui:repeat value="#{loginSession.liCatalog}" var="catMenuOption">
+                                  <li><a href="#{catMenuOption.idMenuOption.menuOptionURL}">#{catMenuOption.idMenuOption.menuOptionName}</a></li>
+                            </ui:repeat>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                <li class="no-padding">
+                    <ul class="collapsible collapsible-accordion">
+                      <li>
+                          <a class="collapsible-header"><i class="fas fa-tags fa-2x"/>Etiquetas</a>
+                        <div class="collapsible-body">
+                          <ul>
+                              <ui:repeat value="#{loginSession.liLabels}" var="labelMenuOption">
+                                  <li><a href="#{labelMenuOption.idMenuOption.menuOptionURL}">#{labelMenuOption.idMenuOption.menuOptionName}</a></li>
+                            </ui:repeat>
+                            
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                <li class="no-padding">
+                    <ul class="collapsible collapsible-accordion">
+                      <li>
+                          <a class="collapsible-header"><i class="fas fa-cog fa-2x"/>Configuración</a>
+                        <div class="collapsible-body">
+                          <ul>
+                              <ui:repeat value="#{loginSession.liConfiguration}" var="configMenuOption">
+                                  <li><a href="#{configMenuOption.idMenuOption.menuOptionURL}">#{configMenuOption.idMenuOption.menuOptionName}</a></li>
+                            </ui:repeat>
+                            
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                
+                <li class="no-padding">
+                    <ul class="collapsible collapsible-accordion">
+                      <li>
+                          <a class="collapsible-header"><i class="fas fa-cubes fa-2x"/>Otro</a>
+                        <div class="collapsible-body">
+                          <ul>
+                            
+                            
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                
+                <!--<li><a class="subheader">Subheader</a></li>-->
+                
+                
+                <li>
+                    <div class="divider" ></div>
+                </li>
+                <li>
+                    <p:commandLink styleClass="waves-effect waves-light bue-text text-darken-3"                                 
+                                   style="font-weight: 500;
+                                          text-decoration: none;
+                                          padding-left: 16px">
+                        <p:ajax listener="#{loginSession.logof}"/>
+                        
+                        <i class="icofont-exit icofont-2x  bue-text text-darken-3"></i>Salir
+                    </p:commandLink>
+                </li>
+           
+            </ul>
+
+
+
+           
+
+        </div>
+        
+        <main class="blue-grey darken-2">
+            
+            <div id="content" class="center_content">
+                <div class="row">
+               <div class="col s12 m10 l8 offset-l2 offset-m1">
+                <ui:insert name="content">
+                    
+                </ui:insert>
+               </div>
+                   </div>
+
+            </div>
+        </main>
+            
+        <div id="bottom">
+            <ui:insert name="bottom"></ui:insert>
+
+                
+
+        </div>
+        
+
+
+        <!-- Modal Structure spinner -->
+
+        <div class="row" style="margin-bottom: -1px;">
+            <div class="col l1 m1 s1">
+                <div id="processing" class="modal transparent z-depth-0" style="height:170px; width:200px;">
+                    <div class="modal-content center"   style="height:120px">
+
+
+                              <div class="preloader-wrapper big active">
+                                  <div class="spinner-layer">
+                                  <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                  </div><div class="gap-patch">
+                                    <div class="circle"></div>
+                                  </div><div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                        
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="page-footer ">
+            
+            <div class="footer-copyright">
+                <div class="container">
+                    
+                      © 2021
+                    <span style="letter-spacing: -2px"><i class="icofont-info-square icofont-2x" style="color: #d3a13b;"/>
+                        <span style="letter-spacing: 1px; font-size: medium">nkaware
+                            </span>
+                    </span>
+                      
+                  
+                                   </div>
+            </div>
+        </footer>
+
+        <!--modal initializer-->
+        <script type="text/javascript">
+//             $(document).ready(function() {
+//                 $('select').material_select();
+//                });
+                
+     initModal();
+    function initModal(){
+//            $(document).ready(function () {
+//                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+//                $('.modal').modal({
+//      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+//      opacity: .5, // Opacity of modal background
+//      inDuration: 300, // Transition in duration
+//      outDuration: 200, // Transition out duration
+//      startingTop: '4%', // Starting top style attribute
+//      endingTop: '10%', // Ending top style attribute
+//      preventScrolling: true
+//          }
+//  );
+//            });
+            
+            
+}
+
+        
+                                           
+        $(document).ready(function(){
+             $('.sidenav').sidenav();
+             $('.collapsible').collapsible();
+            });
+          // Initialize collapse button
+    //                $(".sidebar-collapse").sideNav({
+    //                    menuWidth: 250
+    //
+    //                });
+                // Initialize collapsible (uncomment the line below if you use the dropdown variation)
+//                $('.collapsible').collapsible();
+          
+//                    
+//                    $('.datepicker').pickadate({
+//                         selectMonths: true, // Creates a dropdown to control month
+//                         selectYears: 15 // Creates a dropdown of 15 years to control year
+//                     });
+                     
+                     initDatepicker();
+                     
+                     function initDatepicker(){
+                      $(document).ready(function(){
+                     $('.datepicker').datepicker({
+                         format: "yyyy/mm/dd",
+                         autoClose: true,
+                         setDefaultDate: true ,
+                         yearSelect: false,
+                         i18n: {
+                                  cancel: 'Cancelar',
+                                  clear: 'Limpar',
+                                  done: 'Aceptar',
+                                  months:[
+                                      'Enero',
+                                      'Febrero',
+                                      'Marzo',
+                                      'Abril',
+                                      'Mayo',
+                                      'Junio',
+                                      'Julio',
+                                      'Agosto',
+                                      'Septiembre',
+                                      'Octubre',
+                                      'Noviembre',
+                                      'Diciembre'
+                                  ],
+                                  monthsShort: [
+                                              'Ene',
+                                              'Feb',
+                                              'Mar',
+                                              'Abr',
+                                              'May',
+                                              'Jun',
+                                              'Jul',
+                                              'Ago',
+                                              'Sep',
+                                              'Oct',
+                                              'Nov',
+                                              'Dic'
+                                            ],
+                                  
+                              weekdaysShort: [
+                                              'Dom',
+                                              'Lun',
+                                              'Mar',
+                                              'Mie',
+                                              'Jue',
+                                              'Vie',
+                                              'Sab'
+                                            ],
+                               weekdaysAbbrev: ['D','L','M','M','J','V','S'],
+                               weekdays: [
+  'Domingo',
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado'
+]
+                                }
+                     });
+                        });
+                     }
+                     
+                     
+                    $('.dropdown-trigger').dropdown();
+                     
+                   //            funcion utilizada para reiniciar los input text y 
+//            evitar que se empalme el texto de la etiqueta con el del valor
+            function updateInputs(){
+                 $(document).ready(function() {
+                 M.updateTextFields();
+                 
+                 });
+                
+            }
+        
+        
+        initSelect();
+        function initSelect(){
+      $(document).ready(function(){
+    $('select').formSelect();
+  });
+  
+        } 
+        
+          $(document).ready(function(){
+    $('.tabs').tabs();
+  });
+  
+
+ 
+// function updateTable() {
+// document.getElementById("myTable")
+//}
+//window.addEventListener('resize', updateTable);
+
+
+        </script>
+
+    </h:body>
+
+</html>

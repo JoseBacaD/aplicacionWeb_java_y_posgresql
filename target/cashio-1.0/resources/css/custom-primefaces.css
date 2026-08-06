@@ -1,0 +1,143 @@
+light-blue-text text-darken-4
+
+
+.ui-selectonemenu-trigger{
+   
+    width: 25px !important;
+    border: 0;
+    background: #039be5;
+    
+   
+   
+}   
+
+
+
+.ui-selectonemenu-label{
+    height: 2.89rem;
+    font-size: 1em;
+    color: #9e9e9e;
+    padding-top: 8px !important;
+    
+}
+
+.ui-selectonemenu{
+    font-size: 2em;
+    padding-right: 0px !important;
+    width: 100% !important;
+    border:  1px solid;
+    border-radius: 4px;
+    margin-top: 2px
+    
+}
+
+/*.ui-selectonemenu-item{
+ 
+}*/
+
+/*.iu-selectonemenu-items{
+  
+}*/
+
+.ui-selectonemenu-list-item{
+    padding-top: .8em !important;
+    padding-bottom: .8em !important;
+   
+}
+
+
+.ui-selectonemenu-list{
+    padding-top: .8em !important;
+    padding-bottom: .8em !important;
+}
+.ui-widget{
+    
+    font-size: 1.15em;
+}
+
+.ui-widget-content{
+    max-width: 100% !important;
+   
+}
+
+.ui-paginator{
+    background:#FFFFFF !important;
+    font-weight: 100;
+    border-width: 0px;
+    border: 0px !important;
+    padding: 0px !important;
+}
+
+
+
+
+.ui-datatable thead th,.ui-datatable tbody tfoot td{
+	
+        background: #FFFFFF;
+        text-align: left !important;
+        
+        
+        
+}
+
+.ui-datatable tbody td{
+	border: none !important;
+}
+
+.ui-paginator-pages .ui-paginator-page.ui-state-active {
+    background-color: #616161 !important;
+  
+}
+
+body .ui-datatable .ui-datatable-data>tr.ui-state-highlight {
+    border: 1px solid #c8c8c8;
+    background-color: #616161 !important;
+    color: #fff;
+    cursor: default;
+    border-top: 0px !important;
+    border-bottom: 0px !important;
+}
+
+body .ui-datatable .ui-datatable-data>tr {
+    background-color: #fff;
+    color: #333;
+    border: 0px solid #c8c8c8;
+}
+
+body .ui-paginator body .ui-datatable .ui-paginator-top {
+    background-color: #fff;
+/*    border: 0px solid #c8c8c8;*/
+    padding: 0;
+    border-width: 0px;
+}
+
+body .ui-datatable thead th {
+    background-color: #fff;
+    border: 0px solid #c8c8c8;
+    color: #333;
+    padding: .571em .857em;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td, .ui-datatable tfoot th {
+    padding: 4px 10px;
+    overflow: hidden;
+    border-width: 1px;
+    border-style: solid;
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-active {
+    border-color: #01579b;
+    background-color: #01579b;
+    color: #fff;
+}
+
+
+.ui-paginator-rpp-options {
+    
+    display: none !important;
+    
+}
+
+

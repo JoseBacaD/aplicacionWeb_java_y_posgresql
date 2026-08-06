@@ -1,0 +1,368 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+                
+                 
+            <ui:define name="content">
+                 <f:metadata>
+                     <f:event type="preRenderView" listener="#{procRefundBean.onPageLoad}"/>
+      </f:metadata>
+                <p:ajaxStatus  onstart="$('#processing').modal('open');" onsuccess="$('#processing').modal('close');" />
+
+               <div id="answerModal" class="modal bottom-sheet">
+                    <h:panelGroup id="finishedProcessPanel">
+                        <p:focus context="finishedProcessPanel"/>
+                        <div class="modal-content center-align black-text">
+                            <h5>#{bundle['modal.updtcreate.confirm']}</h5>
+                            <i class="#{procRefundBean.strAnsMessIcon} #{procRefundBean.strIconColor} icofont-3x"/>
+                            <h6>#{procRefundBean.answerMessage}</h6>
+                            <h6 style="margin-top: 0px"> #{procRefundBean.strSaleNumber}</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row" style="margin-bottom: 0px; width: 99%; margin-right: 0px; margin-left: 0px">
+                                <div class="col s12 m6 l6 offset-l3 offset-m3 ">
+                                   
+                                    <a class="modal-action modal-close waves-effect waves-light btn"
+                                       style="width: 100%;
+                                              text-decoration: none;
+                                              color:white">
+                                        <i class="icofont-check-alt"></i> Aceptar</a>  
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+                
+                
+                
+                 <div id="refundModal" class="modal modal-fixed-footer" style="max-width: 500px; min-width: 240px; min-height: 550px; max-height: 550px">
+                     
+                    <h:form id="refundModalForm">
+                        <h:panelGroup id="panelRefund">
+                       
+                        <p:focus context="panelRefund"/>
+                        <div class="modal-content" >
+                            <h6>Procesar Devolución</h6>                        
+                            <div class="row">
+                                <div class=" col s12 input-field" style="margin-bottom: 0px">
+                                    <h:inputText                                                 
+                                        id="quantity"
+                                        value = "#{procRefundBean.quantity}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="Mayor a 0 y menor o igual a #{procRefundBean.maxQuantity}">
+                                        <f:validateDoubleRange minimum="0.01" maximum="#{procRefundBean.maxQuantity}" />
+                                        <p:ajax event="change"
+                                                listener="#{procRefundBean.callCalcRefund()}"
+                                                        update="tableForm @form"
+                                                        oncomplete="updateInputs();"/>
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="quantity"/>
+                                    <label for="quantity">Cantidad</label>
+                                </div>
+                                
+                                <div class=" col s12">
+                                <label  for="isMerchadise" >Devolución en:</label> 
+                                    <div class="switch">
+                                <label>
+                                    Efectivo
+                                    <h:selectBooleanCheckbox value="#{procRefundBean.isMerchandiseChecked}">
+                                        <p:ajax update="refundModalForm" listener="#{procRefundBean.updateCheckBoxState()}"/>
+                                    </h:selectBooleanCheckbox>
+                                  <span class="lever"></span>
+                                    Mercancía
+                                </label>
+                                    </div>    
+                                        
+                              </div>
+                                
+                                 <div class=" col s12">
+                                     <label  for="withDiscount" >Descuento (#{procRefundBean.onScreenRefundPercentage}%):</label> 
+                                    <div class="switch">
+                                <label>
+                                  No
+                                  <h:selectBooleanCheckbox value="#{procRefundBean.isWithDiscountChecked}"
+                                                           disabled="#{procRefundBean.isWithDiscountDisabled}" >
+                                      <p:ajax update="refundModalForm" listener="#{procRefundBean.callCalcRefund}"/>
+                                  </h:selectBooleanCheckbox>
+                                  <span class="lever"></span>
+                                  Si
+                                </label>
+                                    </div>    
+                                        
+                              </div>
+                                <div class="row"></div>
+                                <div class=" col s12  input-field"  style="margin-top: 0px;">
+                                    
+                                    <p  style="margin-top: 0px;">                                      
+                                        <b>Código:</b> <br/>                                        
+                                        #{procRefundBean.rowSelected.standardCodeItem.standardCodeItem}<br/>
+                                        <b>Descripción:</b> <br/> 
+                                        #{procRefundBean.rowSelected.standardCodeItem.descItem}<br/>
+                                        <b>Monto total devolución:</b> <br/> 
+                                        <span class="pink-text text-darken-4" style="font-size: 18px">  $#{procRefundBean.strCalcPriceDetail}</span><br/>
+                                    </p>
+                                </div>
+                                
+                               </div>
+                               
+                                    
+                            <div class="modal-footer" style="max-width: 450px; min-width: 210px; width: 90%; height: 60px">
+                            
+                                <div class="col s6 l6 m6">
+                                    <p:commandLink styleClass="waves-effect waves-light btn"              
+                                                   actionListener="#{procRefundBean.callMainProcess}"
+                                                   oncomplete="updateInputs();"
+                                                   style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                                
+                                                   update="searchForm tableForm @form finishedProcessPanel"
+                                                   >        
+                                        
+                                        <i class="icofont-check-alt"></i> Aceptar
+                                    </p:commandLink>
+                                </div>
+                           
+                            
+                            
+                                <div class="col s6 l6 m6">
+                                
+                                    <p:commandLink
+                                        style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                                  
+                                        styleClass="modal-action modal-close
+                                        waves-effect waves-light 
+                                        btn"
+                                        oncomplete="updateInputs(); "
+                                        update="searchForm">
+                                        <i class="icofont-close-line"/>
+                                        <p:focus context="searchForm"/>
+                                        Cancelar
+                                    </p:commandLink>
+                                
+                                </div>
+                            
+                            </div>
+                            
+                        </div>
+                        
+                        </h:panelGroup>
+
+                    </h:form>
+                </div>
+                
+                
+                
+                
+                
+                
+                
+                
+                <h:form id="searchForm">
+                    <h:panelGroup id="panelSearch">
+                        <p:focus context="panelSearch" />
+                    <div class="row" style="margin-bottom: 0px;" >
+                        <div class="col s12">
+                            <div class="card hoverable " style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <h5 style="margin-top: 0px"><i class="fas fa-exchange-alt"/> Devoluciones</h5>
+
+                                    <div class="row">
+                                              <div class="col s12 m6 l6 offset-l3 offset-m3  input-field">
+                                            <p:inputText
+                                                
+                                                id="filter1"
+                                                required="true"
+                                                converter="EmptyToNullConverter"
+                                                value = "#{procRefundBean.strFolio}"
+                                                requiredMessage="#{bundle.validationmessagereguired}"
+                                                validatorMessage="Máximo 9 digitos">
+                                                  <f:validateLength maximum="9" />
+                                            </p:inputText>
+                                            <h:messages class="red-text" for="filter1"/>
+                                            <label for="filter1" >Número venta</label> 
+                                              </div>
+                                        </div>
+                                   
+                                    
+                                    
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-l4 offset-m4 " >                        
+                                            <p:commandLink action="#{procRefundBean.callReadSaleList}"
+                                                           styleClass="btn waves-effect waves-light"
+                                                           style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                           update="tableForm @form"
+                                                           
+                                                           ajax="true"
+                                                           oncomplete="updateInputs();
+                                                                       
+                                                                       "
+                                                                       >
+
+                                                <i class="icofont-search"></i> #{bundle['search.btn.search']}
+                                            </p:commandLink> 
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                 </h:panelGroup>
+              </h:form>
+                
+                <h:form id="tableForm">
+                    <div class="row" style="margin-bottom: 0px;">
+                        <div class="col s12">
+                            <div class="card ">
+                                <div class="card-content">
+                                    
+                                        
+
+                                    <div class="row" style="margin-bottom: 8px" >
+                                        <div class="col s12">
+                                            <p:tooltip for="resultTable" value="Clic sobre el artículo a devolver" position="top"/>
+                                            <p:dataTable id="resultTable" 
+                                                         styleClass="table table-hover"
+                                                         value="#{procRefundBean.saleList}"
+                                                         var="row"
+                                                         emptyMessage="#{bundle['resulttable.nomatchfound']}"
+                                                         selectionMode="single"
+                                                         selection="#{procRefundBean.rowSelected}"
+                                                         rowKey="#{row.idDetail}"
+                                                         
+                                                         tableStyle="table-layout:auto;"
+                                                         reflow="true"
+                                                         paginator="false"
+                                                         lazy="false"
+                                                         paginatorTemplate="{CurrentPageReport}
+
+                                                         {FirstPageLink}
+                                                         {PreviousPageLink}
+                                                         {PageLinks}
+                                                         {NextPageLink}
+                                                         {LastPageLink}
+                                                         {RowsPerPageDropdown}">    
+                                                <p:ajax event="rowSelect" listener="#{procRefundBean.onRowSelect}" 
+                                                        update="searchForm tableForm refundModalForm"
+                                                        oncomplete="updateInputs(); $('#refundModal').modal('open');
+                                                        $(function(){PrimeFaces.focus('refundModalForm:quantity');});"
+                                                        />
+                                                
+                                                <p:column headerText="No. venta" id="noVenta">   
+                                                    
+                                                    <h:outputText value="#{row.folio.folio}" />
+                                                </p:column>
+                                                <p:column headerText="Cantidad">
+                                                    <h:outputText value="#{row.quantity}" />
+                                                </p:column>
+                                                <p:column headerText="Código">                                                   
+                                                    <h:outputText value="#{row.standardCodeItem.standardCodeItem}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Descripción">                                                   
+                                                    <h:outputText value="#{row.standardCodeItem.shortDescItem}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Monto">                                                  
+                                                    <h:outputText value="#{row.priceDetail}" />
+                                                </p:column>
+                                                 
+                                                <p:column headerText="Fecha venta">                                                    
+                                                    <h:outputText value="#{row.saleDate}" >
+                                                        <f:convertDateTime type="date" pattern="dd-MMMMM-yyy"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                
+                                                
+                                              
+
+
+                                            </p:dataTable>
+                                        </div>
+                                         </div>
+                                        
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>    
+
+
+                </h:form>
+                
+                
+                
+                <script>
+                     $('.modal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+                    
+                    
+         initModal();
+    function initModal(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#processing').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}           
+                 
+                 function popupWindow(url, title) {      
+    window.open(url , title);        
+}    
+
+function downloadTicket(uri, name) 
+{
+    var link = document.createElement("a");
+    // If you don't know the name or want to use
+    // the webserver default set name = ''
+    link.setAttribute('download', name);
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+                    
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

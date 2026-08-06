@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+
+            <ui:define name="content">
+               
+                 
+                
+                                   <h:form>
+                                   
+                            <h:panelGroup  id="homePanel">
+                                <div class="row" style="margin-bottom: 0px">
+                                    <div class="col s12">
+                                      <div class="card  hoverable" style="margin-bottom: 0px">
+                                        <div class="card-content light-blue-text text-darken-4">
+                                          <span class="card-title"> <i class="fas fa-cash-register fa-2x"></i> Transacciones</span>                                         
+                                        </div>
+                                        <div class="card-action">
+                                          
+                                              
+                                            <div class="row">
+                                                      <ui:repeat value="#{loginSession.liTransactions}" var="transacOption">
+                                                          <div class=" col s12 m4 l4">
+                                                              <a class="light-blue-text text-darken-4"  href="#{transacOption.idMenuOption.menuOptionURL}">  #{transacOption.idMenuOption.menuOptionName}</a> <br/>
+                                                        </div>
+                                                          
+                                                      </ui:repeat>
+                                                 
+                                                 </div> 
+                                                
+                                         
+                                      
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                
+                                <div class="row" style="margin-bottom: 0px">
+                                
+                                    <div class="col s12">
+                                      <div class="card  hoverable" style="margin-bottom: 0px">
+                                        <div class="card-content light-blue-text text-darken-4">
+                                          <span class="card-title"> <i class="icofont-presentation-alt icofont-2x"></i> Reportes</span>                                         
+                                        </div>
+                                        <div class="card-action">
+                                          <div class="row">
+                                              <ui:repeat value="#{loginSession.liReports}" var="reportOption">
+                                                          <div class=" col s12 m4 l4">
+                                                              <a class="light-blue-text text-darken-4"  href="#{reportOption.idMenuOption.menuOptionURL}">  #{reportOption.idMenuOption.menuOptionName}</a> <br/>
+                                                        </div>    
+                                                      </ui:repeat>
+                                                 
+                                                 </div> 
+                                        </div>
+                                      </div>
+                                    </div>
+                                      </div>
+                                 <div class="row" style="margin-bottom: 0px">
+                                    <div class="col s12">
+                                      <div class="card  hoverable" style="margin-bottom: 0px">
+                                        <div class="card-content  light-blue-text text-darken-4">
+                                          <span class="card-title"> <i class="icofont-book icofont-2x"></i> Catálogos</span>                                         
+                                        </div>
+                                        <div class="card-action">
+                                             <div class="row">
+                                                 <ui:repeat value="#{loginSession.liCatalog}" var="catalogOption">
+                                                          <div class=" col s12 m4 l4">
+                                                              <a class="light-blue-text text-darken-4" href="#{catalogOption.idMenuOption.menuOptionURL}">  #{catalogOption.idMenuOption.menuOptionName}</a> <br/>
+                                                        </div>    
+                                                      </ui:repeat>
+                                                 
+                                                 </div> 
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                 <div class="row" style="margin-bottom: 0px">
+                                    <div class="col s12">
+                                      <div class="card  hoverable" style="margin-bottom: 0px">
+                                        <div class="card-content light-blue-text text-darken-4">
+                                          <span class="card-title"> <i class="fas fa-tags fa-2x"></i> Etiquetas</span>                                         
+                                        </div>
+                                        <div class="card-action ">
+                                              <div class="row">
+                                                  <ui:repeat value="#{loginSession.liLabels}" var="labelOption">
+                                                          <div class="col s12 m4 l4">
+                                                              <a class="light-blue-text text-darken-4"  href="#{labelOption.idMenuOption.menuOptionURL}">  #{labelOption.idMenuOption.menuOptionName}</a> <br/>
+                                                        </div>    
+                                                      </ui:repeat>
+                                                 
+                                                 </div> 
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                    <div class="row" style="margin-bottom: 0px">
+                                    <div class="col s12">
+                                      <div class="card  hoverable" style="margin-bottom: 0px">
+                                        <div class="card-content light-blue-text text-darken-4">
+                                          <span class="card-title"> <i class="fas fa-cog fa-2x"></i> Configuración</span>                                         
+                                        </div>
+                                        <div class="card-action light-blue-text text-darken-4">
+                                          <div class="row">
+                                              <ui:repeat value="#{loginSession.liConfiguration}" var="configOption">
+                                                          <div class="col s12 m4 l4">
+                                                              <a class="light-blue-text text-darken-4" href="#{configOption.idMenuOption.menuOptionURL}">  #{configOption.idMenuOption.menuOptionName}</a> <br/>
+                                                        </div>    
+                                                      </ui:repeat>
+                                                 
+                                                 </div>         
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                 <div class="row" style="margin-bottom: 0px">
+                                    <div class="col s12">
+                                      <div class="card  hoverable" style="margin-bottom: 0px">
+                                        <div class="card-content light-blue-text text-darken-4">
+                                          <span class="card-title"> <i class="fas fa-cubes fa-2x"></i> Otros</span>                                         
+                                        </div>
+                                        <div class="card-action light-blue-text text-darken-4">
+                                          <div class="row">
+                                              <ui:repeat value="#{loginSession.liOther}" var="otherOption">
+                                                          <div class=" col s12 m4 l4">
+                                                              <a class="light-blue-text text-darken-4"  href="#{otherOption.idMenuOption.menuOptionURL}">  #{otherOption.idMenuOption.menuOptionName}</a> <br/>
+                                                        </div>    
+                                                      </ui:repeat>
+                                                 
+                                                 </div>         
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                
+                                <div class="row" style="margin-bottom: 0px">
+                                    <div class="col s12">
+                                      <div class="card hoverable" style="margin-bottom: 0px">
+                                        <div class="card-content light-blue-text text-darken-4">
+                                          <span class="card-title"> <i class="icofont-exit fa-2x"></i></span>                                         
+                                        </div>
+                                        <div class="card-action">
+                                          <div class="row">
+                                             
+                                                          <div class=" col s12 m4 l4">
+                                                            <p:commandLink
+                                                                styleClass="light-blue-text text-darken-4"
+                                                                    action="#{homeBean.logof}"
+                                                                    style="text-decoration: none"                             >
+                                                    
+                                                                    <h6 class="">SALIR</h6>
+                                                
+                                            </p:commandLink>
+                                                        </div>    
+                                                    
+                                                 
+                                                 </div>         
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                
+                        </h:panelGroup>           
+                   
+                 </h:form> 
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

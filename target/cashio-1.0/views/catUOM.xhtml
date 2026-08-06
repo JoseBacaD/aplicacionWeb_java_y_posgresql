@@ -1,0 +1,442 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./parentTemplate.xhtml">
+
+            <ui:define name="content">
+                 <f:metadata>
+                     <f:event type="preRenderView" listener="#{catUOMBean.onPageLoad}"/>
+                 </f:metadata>
+                <p:ajaxStatus  onstart="$('#processing').modal('open');" onsuccess="$('#processing').modal('close');" />
+                <style>
+                     .hide-label{ display:none;}
+                </style>
+
+                <h:form id="searchForm">
+
+                    <div class="row" style="margin-bottom: 0px;" >
+                        <div class="col s12">
+                            <div class="card z-depth-5" style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <h5><i class="fas fa-book-open"/> Unidad de medida</h5>
+
+                                     <div class="row">
+                                          <div class="col s12 m6 l6 offset-l3 offset-m3 input-field">
+                                            
+                                              <h:selectOneMenu value="#{catUOMBean.filterValue}">    
+                <f:selectItem itemLabel="Todo" itemValue="0"/>  
+                <f:selectItem itemLabel="Descripción" itemValue="1"/>
+                <p:ajax update="@form"
+                        event="change" listener="#{catUOMBean.setLabels}"
+                        oncomplete="updateInputs(); initDatepicker(); initSelect();"/>  
+            </h:selectOneMenu>  
+             <label  for="filter6" ></label>
+           
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                       
+                                        <div class="col s12 m6 l6 offset-l3 offset-m3 input-field">
+                                            <p:inputText
+                                                rendered="#{catUOMBean.filterValue == '1'}"
+                                                id="filter3"
+                                                required="true"
+                                                converter="EmptyToNullConverter"
+                                                value = "#{catUOMBean.uomExt.uomEntity.descUom}"
+                                                converterMessage="#{bundle.validationmessagenumeric}"
+                                                requiredMessage="#{bundle.validationmessagereguired}">
+                                            </p:inputText>
+                                            <h:messages class="red-text" for="filter3"/>
+                                            <label class="#{catUOMBean.hideDesc}" for="filter3" >Ingresar descripción</label> 
+
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-l4 offset-m4 " >                        
+                                            <p:commandLink 
+                                                           styleClass="btn waves-effect waves-light"
+                                                           style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                           update="tableForm @form"
+                                                           action="#{catUOMBean.populateTable()}"
+                                                           oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                                           >
+
+                                               <i class="icofont-search"></i> #{bundle['search.btn.search']}
+                                            </p:commandLink> 
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </h:form>
+
+
+                <h:form id="tableForm">
+                    <div class="row" style="margin-bottom: 0px;">
+                        <div class="col s12">
+                            <div class="card z-depth-3">
+                                <div class="card-content">
+                                   
+                                      <div class="col s3 offset-m9 offset-l10 offset-s09" style="margin-bottom: 5px">
+                                          
+                                          
+                                        <h:commandLink styleClass="">
+                                            <p:dataExporter type="xls" target="resultTable" fileName="reporteCSV" pageOnly="false"/>
+                                            <i class="fas fa-file-download fa-2x light-blue-text text-darken-4"
+                                               style="padding-right: 10px;
+                                               padding-bottom: 13px;">
+                                            </i>
+                                        </h:commandLink>
+                                          
+                                          
+                                           <p:commandLink styleClass="btn-floatingwaves-effect waves-light
+                                                          light-blue-text text-darken-4
+                                                          hide-on-small-and-down     "
+                                       style=" text-decoration: none;
+                                               color: white;"
+                                       action="#{catUOMBean.addNew}" 
+                                       update="modalForm"
+                                       oncomplete="updateInputs(); $('#CRUDModal').modal('open');">
+                            <i class="fa fa-plus fa-2x"></i>
+                            <p:resetInput target="modalForm" />
+                        </p:commandLink>
+                                   </div>
+                                    
+                                   
+
+
+                                    <div class="row" style="margin-bottom: 8px">
+                                        <div class="col s12">
+                                            <p:dataTable id="resultTable" 
+
+
+                                                         value="#{catUOMBean.objLazyList}"
+                                                         var="row"
+                                                         emptyMessage="#{bundle['resulttable.nomatchfound']}"
+                                                         tableStyle="table-layout:auto;"
+                                                         reflow="true"
+                                                         paginator="true" rows="20"
+                                                         lazy="true"
+                                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                                         rowsPerPageTemplate="20,50,100,{ShowAll|'Todos'}"
+                                                         paginatorTemplate="{CurrentPageReport}
+                                                         {FirstPageLink}
+                                                         {PreviousPageLink}
+                                                         {PageLinks}
+                                                         {NextPageLink}
+                                                         {LastPageLink}
+                                                         {RowsPerPageDropdown}">       
+
+
+
+                                                <p:column exportable="false"  > 
+                                                    <f:facet name="header">#{bundle['resulttable.actioncolumn']}</f:facet>
+                                                    <div class="row">
+                                                        <div class="col s3 m6 l6">
+                                                            <p:commandLink styleClass="
+                                                                           waves-effect"
+                                                                           style=" text-decoration: none;
+                                                                                   color: white;"
+                                                                           oncomplete="updateInputs(); initSelect(); initDatepicker(); $('#CRUDModal').modal('open');"
+                                                                           update="modalForm"><i class="fas fa-pencil-alt fa-2x light-blue-text text-darken-4"></i>
+                                                                <f:setPropertyActionListener value="#{row}" target="#{catUOMBean.uomExt.selected}" />
+                                                                <p:resetInput target="modalForm"/>
+                                                            </p:commandLink>
+                                                        </div>
+                                                       
+
+                                                    </div> 
+                                                </p:column>
+                                                
+                                                 <p:column headerText="#{bundle['uom.columnname.uomcode']}">      
+                                                    <h:outputText value="#{row.codeUom}" />
+                                                </p:column>
+
+                                                <p:column headerText="#{bundle['uom.columnname.desc']}">      
+                                                    <h:outputText value="#{row.descUom}" />
+                                                </p:column>
+                                                  <p:column headerText="#{bundle['department.columnname.codedep']}">      
+                                                    <h:outputText value="#{row.shortName}" />
+                                                </p:column>
+                                                
+                                               
+                                                <p:column headerText="Modificado por">                                                   
+                                                    <h:outputText value="#{row.modifiedBy}" />
+                                                </p:column>
+                                                <p:column headerText="Fecha modificación">                                                   
+                                                    <h:outputText value="#{row.lastModDate}" />
+                                                </p:column>
+                                                
+                                            </p:dataTable>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col s3 offset-m9 offset-l10 offset-s09" style="margin-bottom: 5px; padding-left: 20px">
+                                        <h:commandLink styleClass=""
+                                                       style="padding-right: 10px;
+                                               padding-bottom: 13px;
+                                               ">
+                                            <p:dataExporter type="xls" target="resultTable" fileName="reporteCSV" pageOnly="false"/>
+                                            <i class="fas fa-file-download fa-2x green-text text-darken-4">
+                                            </i>
+                                        </h:commandLink>
+                                          
+                                          
+                                           <p:commandLink styleClass="btn-floatingwaves-effect waves-light
+                                                          pink-text text-darken-4
+                                                          hide-on-small-and-down     "
+                                       style=" text-decoration: none;
+                                               color: white;"
+                                       action="#{catUOMBean.addNew}" 
+                                       update="modalForm"
+                                       oncomplete="updateInputs(); initSelect(); $('#CRUDModal').modal('open');">
+                            <i class="fa fa-plus fa-2x"></i>
+                            <p:resetInput target="modalForm" />
+                        </p:commandLink>
+                                      </div>
+                                </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>    
+
+
+
+
+
+
+
+                </h:form>
+
+                <div id="CRUDModal" class="modal modal-fixed-footer" >
+                    <h:form id="modalForm">
+                        <div class="modal-content">
+                            <h4>#{bundle['modal.crud.tittle']}</h4>
+
+                            <div class="row">
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field1"
+                                        value = "#{catUOMBean.uomExt.selected.codeUom}"
+                                        required="true"
+                                        validatorMessage="Máximo 8 digitos"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}">
+                                        <f:validateLength maximum="8"/>
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field1"/>
+                                    <label for="field1">#{bundle['uom.columnname.uomcode']}</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field2"
+                                        value = "#{catUOMBean.uomExt.selected.descUom}"
+                                        required="true"
+                                        validatorMessage="Máximo 10 caracteres"
+                                        requiredMessage="#{bundle.validationmessagereguired}">
+                                        <f:validateLength maximum="10"/>
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field2"/>
+                                    <label for="field2">#{bundle['uom.columnname.desc']}</label>
+                                </div>
+
+                            </div>
+
+                            <div dlass="row">
+                                <div class="col s12 input-field">
+                                    <h:inputText                                                 
+                                        id="field3"
+                                        value = "#{catUOMBean.uomExt.selected.shortName}"
+                                        required="true"
+                                        validatorMessage="Máximo 5 caracteres"
+                                        requiredMessage="#{bundle.validationmessagereguired}">
+                                        <f:validateLength maximum="5"/>
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field3"/>
+                                    <label for="field3">Desc corta</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer ">
+                            <div class="row" style="width: 99%; margin-left: 2px">
+                                <div class="col s6">
+                                    <p:commandLink styleClass="waves-effect waves-light btn"              
+                                                   action ="#{catUOMBean.callMerge}"
+                                                   oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                                   style="width:99%; text-decoration: none;
+                                                                  color: white;"
+                                                   update="modalForm searchForm tableForm finishedProcessPanel"
+                                                   >                           
+                                        <i class="icofont-save icofont-flip-horizontal"/> Guardar
+                                    </p:commandLink>
+                                </div>
+
+                                <div class="s6 left-align">
+                                    <p:commandLink
+                                        styleClass="modal-action modal-close
+                                        waves-effect waves-light btn
+                                        "
+                                        style="width:48%; text-decoration: none;
+                                                                  color: white;"
+                                        action="#{catUOMBean.addNew}"
+                                        oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                        update="searchForm">
+                                        <i class="icofont-close"/> Cancelar
+                                    </p:commandLink>
+                                </div>     
+                            </div>     
+                        </div>
+
+
+                    </h:form>
+                </div>
+
+                <!--boton flotante añadir nuevo-->
+                <div class="row" style="margin-bottom: 0px;">
+                    <div class="fixed-action-btn" style="bottom: 11%">
+                        <p:commandLink styleClass="btn-floating
+                                       btn-large 
+                                       waves-effect waves-light
+                                       hide-on-med-and-up"
+                                       style=" text-decoration: none;
+                                               color: white;"
+                                       action="#{catUOMBean.addNew}" 
+                                       update="modalForm"
+                                       oncomplete="updateInputs(); initSelect(); $('#CRUDModal').modal('open');">
+                            <i class="fa fa-plus"></i>
+                            <p:resetInput target="modalForm" />
+                        </p:commandLink>
+
+
+                    </div>
+                </div>
+                <div id="warningModal" class="modal">
+                    <div class="modal-content center-align black-text ">
+
+                        <h5>#{bundle['modal.delete.tittle']}</h5>
+                        <h6>#{bundle['modal.delete.question']}</h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row" style="width: 99%; margin-left: 2px">
+
+                            <div class="col s12 m5 l5  offset-l1 offset-m1 center-align">
+                                <h:form  id="warningForm">
+                                    <p:commandLink style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                   action="#{catUOMBean.callDelete}"
+                                                   styleClass="btn waves-effect waves-light"
+                                                   onsuccess="$('#warningModal').modal('close'); $('#answerModal').modal('open');"
+                                                   update="tableForm @form finishedProcessPanel"
+
+
+                                                   >
+
+                                        <i class="icofont-check-alt"></i>    Aceptar
+                                    </p:commandLink>
+                                </h:form>
+                            </div>
+                            <div class="col s12 m5 l5 center-align">
+                                <a class="btn waves-effect waves-light modal-action modal-close" style="width: 100%;">
+                                    <i class="icofont-close-line"/>
+                                    Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div id="answerModal" class="modal">
+                    <h:panelGroup id="finishedProcessPanel">
+                        <div class="modal-content center-align black-text">
+                            <h5>#{bundle['modal.updtcreate.confirm']}</h5>
+
+                            <h6>#{catUOMBean.answerMessage}</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row" style="width: 99%; margin-left: 0px">
+                                <div class="col s12 m6 l6 offset-m3 offset-l3">
+                                    <a class="modal-action modal-close waves-effect waves-light btn" style="width: 100%; text-decoration: none; color:white">
+                                        <i class="icofont-check-alt"></i> Aceptar</a>  
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+
+           <script>
+     initModal();
+    function initModal(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('.modal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}
+initProcessing();
+    function initProcessing(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#processing').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}
+                </script>
+
+
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

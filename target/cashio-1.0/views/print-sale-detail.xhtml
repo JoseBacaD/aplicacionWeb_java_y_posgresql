@@ -1,0 +1,231 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="/css/materialize.css"/>
+         <h:outputStylesheet name="/css/commadLinkCustom.css"/>
+        <h:outputStylesheet name="/css/custom-materialize.css"/>
+        <h:outputStylesheet name="/css/materialize.css"/>
+        <h:outputStylesheet name="/css/fontawesome.min.css"/>
+        <h:outputStylesheet name="/css/all.min.css"/>
+        <h:outputStylesheet name="/css/regular.min.css"/>
+        <h:outputStylesheet name="/css/solid.min.css"/>
+         <h:outputStylesheet name="/css/icofont.min.css"/> 
+        <h:outputStylesheet name="/css/svg-with-js.min.css"/>
+        <h:outputScript name="/js/materialize.js"/>
+    
+       
+        <h:outputStylesheet name="/css/custom-primefaces.css"/>
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     
+        
+          <style type="text/css">
+
+    #printable { display: none; }
+
+    @media print
+    {
+        #non-printable { display: none; }
+        #printable { display: block; }
+        body,html {color:black;height: auto}
+    }
+    </style>
+    
+    </h:head>
+    <h:body>
+        <div id="non-printable">
+                <input type="button" onclick="printDiv('printableArea')" value="Imprimir ticket" />
+                <label id="copies">1</label>
+             </div>
+                <h:panelGroup id="ticketPanel">
+    <div id="printableArea"  >
+            <div id="repeatThis" style="font-size: 12px">             
+                <div class="row" style="margin-bottom: 0px">
+                    <div class="col s10 center-align" style="padding-left: 0px;">
+                        <h6  style=" margin-bottom: 0px; font-weight:500;">#{catSaleDetailBean.appConfig.companyName}</h6>
+               </div>
+                    <div class="col s9 center-align" style="padding-left: 0px;">
+               <p style=" margin-bottom: 10px; margin-top: 0px; line-height: 1;">
+                   #{catSaleDetailBean.appConfig.storeAddress}
+                   Tel.: #{catSaleDetailBean.appConfig.storePhone}
+                   
+               </p> 
+                       
+               </div>
+                    <div class="col s9 center-align">
+                         <h6  style=" margin-bottom: 0px; margin-top: 0px; font-weight:500;">VENTA GLOBAL</h6>
+                    </div>
+               </div>
+               <p  style="line-height: .6; margin-bottom: 20px; margin-top: 0px;">
+                  Fecha:
+                  <br></br>
+                  <br></br>
+                  de
+                       <h:outputText value="#{catSaleDetailBean.saleDetExt.abstractField1.dateIniValue}">
+                           <f:convertDateTime pattern="dd-MMMMM-yyyy" />
+                       </h:outputText>
+                       
+                  
+                  <br></br>
+                  <br></br>
+                  
+                           a
+                        <h:outputText value="#{catSaleDetailBean.saleDetExt.abstractField1.dateEndValue}">
+                           <f:convertDateTime pattern="dd-MMMMM-yyyy" locale="es" />
+                       </h:outputText>
+                     
+                  
+ 
+               </p>
+               
+                <table style="width:100%; line-height: .6;" class="responsive">
+                    <tr>
+                  <th style="font-size: 12px; padding-right: 1px">Folio</th>
+                <th style="font-size: 12px; padding-left: 0px; padding-right: 1px">Desc.</th>
+                <th style="font-size: 12px; padding-left: 0px; padding-right: 1px">Cant.</th>
+                <th style="font-size: 12px; padding-left: 0px; padding-right: 0px">Monto</th>
+                
+              </tr>
+                   
+                   <ui:repeat value="#{catSaleDetailBean.printableList}" var="detail">
+                       
+               <tr>
+                    <td style="width: 10%;
+                               padding-top: 5px;
+                               padding-bottom: 5px; 
+                               padding-right: 1px;
+                               font-size: 12px;">#{detail.folio}
+                        </td>
+                   
+                    <td style="width: 20%;
+                               padding-top: 5px;
+                               padding-bottom: 5px;
+                               padding-right: 1px;
+                               padding-left: 0px;
+                               font-size: 12px;
+                               line-height: 1;">
+                      #{detail.standardCodeItem.shortDescItem}
+                    </td>
+                  
+                      <td style="width: 10px;
+                          padding-top: 5px;
+                          padding-bottom: 5px;
+                          padding-right: 1px;
+                          padding-left: 0px;
+                          font-size: 12px;">
+                          #{detail.quantity}
+                      </td>
+                  
+                      <td style="padding-top: 5px;
+                          padding-bottom: 5px;
+                          padding-right: 1px;
+                          padding-left: 0px;
+                          font-size: 12px;
+                          line-height: 1">
+                          $#{detail.priceDetail}
+                     </td>
+                      
+                 
+                     
+                      
+              </tr>
+                 </ui:repeat> 
+            </table>
+              <div class="divider black"></div>
+              
+              
+               
+               <div class="row">
+                   
+                   <h6 style="margin-bottom: 0px;">
+                       Subtotal: $<h:outputText value="#{catSaleDetailBean.subTotal}">
+                     
+                  </h:outputText>
+               </h6>
+
+                    <h6 style="margin-bottom: 0px;  margin-top: 0px">
+                  IVA total: $<h:outputText value="#{catSaleDetailBean.totTax}">
+           
+                  </h:outputText>
+               </h6>
+                   
+                   <div style="padding-left: 0px; ">
+               <h6 style="margin-bottom: 0px;  margin-top: 0px">
+                  Total: $<h:outputText value="#{catSaleDetailBean.totAmount}">
+                      
+                  </h:outputText>
+               </h6>
+              
+               </div>
+               </div>
+               
+               <div class="row"></div>
+               <div class="row">
+                   <div class="col s10 center-align" style="padding-left: 0px;">
+                       <h6>
+                          
+                       </h6>
+                   </div>
+               </div> 
+               
+               <br></br>
+              
+              
+                   <div class="row">
+                  <i class="fas icofont-cut white-text"/>  
+              </div> 
+           </div>
+       
+    </div>
+    </h:panelGroup>
+                
+                
+                <script>
+                    
+                 window.onload = printDiv('printableArea');
+                    
+                    function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+ 
+}
+// window.onafterprint = window.close;
+window.onafterprint = function(){
+     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+    
+    }else{
+     
+      open(location, '_self').close();
+    }
+   
+};
+
+var copies = document.getElementById("copies").textContent;
+window.onload = genCopies();
+
+
+    function genCopies(){
+        for (var i = 1; copies > i; i++) {  
+         var original = document.getElementById('repeatThis');
+    var clone = original.cloneNode(true); // "deep" clone
+   original.parentNode.appendChild(clone);
+        }
+
+    }
+                </script>
+    </h:body>
+</html>
+

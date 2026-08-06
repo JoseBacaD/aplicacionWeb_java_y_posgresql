@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="/css/materialize.css"/>
+         <h:outputStylesheet name="/css/commadLinkCustom.css"/>
+        <h:outputStylesheet name="/css/custom-materialize.css"/>
+        <h:outputStylesheet name="/css/materialize.css"/>
+        <h:outputStylesheet name="/css/fontawesome.min.css"/>
+        <h:outputStylesheet name="/css/all.min.css"/>
+        <h:outputStylesheet name="/css/regular.min.css"/>
+        <h:outputStylesheet name="/css/solid.min.css"/>
+         <h:outputStylesheet name="/css/icofont.min.css"/> 
+        <h:outputStylesheet name="/css/svg-with-js.min.css"/>
+        <h:outputScript name="/js/materialize.js"/>
+    
+       
+        <h:outputStylesheet name="/css/custom-primefaces.css"/>
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     
+        
+          <style type="text/css">
+
+    #printable { display: none; }
+
+    @media print
+    {
+        #non-printable { display: none; }
+        #printable { display: block; }
+        body,html {color: black; height: 99%; page-break-inside: avoid}
+        
+    }
+    </style>
+    
+    </h:head>
+    <h:body>
+        <div id="non-printable">
+                <input type="button" onclick="printDiv('printableArea')" value="Imprimir ticket" />
+                <label id="copies">1</label>
+             </div>
+                <h:panelGroup id="ticketPanel">
+    <div id="printableArea">
+            <div id="repeatThis" style="font-size: 12px">             
+                <div class="row" style="margin-bottom: 0px">
+                    <div class="col s10 center-align" style="padding-left: 0px;">
+                        <h6  style=" margin-bottom: 20px; margin-top: 0px; font-weight:500">#{cashClosingBean.appConfig.companyName}</h6>
+               </div>
+                    <div class="col s9 center-align" style="padding-left: 0px;">
+               <p style=" margin-bottom: 10px; margin-top: 0px; line-height: 1; ">
+                   #{cashClosingBean.appConfig.storeAddress}
+                   Tel.: #{cashClosingBean.appConfig.storePhone}
+                   
+               </p> 
+               </div>
+                    <div class="col s9 center-align">
+                         <h6  style=" margin-bottom: 0px; margin-top: 0px; font-weight:500;">CORTE CAJA</h6>
+                    </div>
+               </div>
+               <p style="line-height: 1; margin-bottom: 0px; margin-top: 0px; ">
+                   Fecha: #{cashClosingBean.strDateToday}
+                  
+                </p>
+               
+               <h6 style="margin-bottom: 0px; margin-top: 0px; font-weight:500" class="left-align">
+                   Reporte venta total
+                    
+               </h6>
+              <div class="divider black"></div>
+              
+              
+               
+               <div class="row">
+                   <div class="col s10 center-align" style="padding-left: 0px;">
+               
+                 <p class="center-align" style="line-height: .6; margin-top: 0px; margin-bottom: 0px;">
+                     
+                     <br>Efectivo: $#{cashClosingBean.strSaleTotCash}</br>
+                     <br>Efe. caja: $#{cashClosingBean.strcountedCash}</br>
+                     <br>Direfencia: $#{cashClosingBean.strDifCash}</br>
+                     <br>Dolares: $#{cashClosingBean.strSaleTotOther}</br>
+                     <br>Dol. caja: $#{cashClosingBean.strcountedDollar}</br>
+                     <br>Diferencia: $#{cashClosingBean.strDifDollar}</br>
+                     <br>Crédito: $#{cashClosingBean.strSaleTotCard}</br>     
+                     <br>Débito: $#{cashClosingBean.strSaleTotDebit}</br>
+                     <br>Retiro: $#{cashClosingBean.strCashwithdrawTotal}</br>
+                     <br>Devolución: $#{cashClosingBean.strTotRefund}</br>
+               </p> 
+                     <h6 style="margin-bottom: 0px; margin-top: 0px; font-weight:500" class="center-align">
+                   Venta total: $<h:outputText value="#{cashClosingBean.strSaleGrandTotal}">
+                      <f:convertNumber pattern="#0.00" />
+                  </h:outputText>
+               </h6>
+                       
+               </div>
+               </div>
+               
+              
+
+                 
+           </div>
+         <br></br>
+              <div class="row">
+                ' 
+              </div> 
+    </div>
+    </h:panelGroup>
+                
+                
+                <script>
+                    
+                 window.onload = printDiv('printableArea');
+                    
+                    function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+ 
+}
+
+window.onafterprint = function(){
+     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+  
+    }else{
+  
+      open(location, '_self').close();
+    }
+   
+};
+ 
+
+
+var copies = document.getElementById("copies").textContent;
+window.onload = genCopies();
+
+
+    function genCopies(){
+        for (var i = 1; copies > i; i++) {  
+         var original = document.getElementById('repeatThis');
+    var clone = original.cloneNode(true); // "deep" clone
+   original.parentNode.appendChild(clone);
+        }
+
+    }
+                </script>
+    </h:body>
+</html>
+

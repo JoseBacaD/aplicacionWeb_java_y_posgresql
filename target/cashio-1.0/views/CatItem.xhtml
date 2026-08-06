@@ -1,0 +1,913 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+       
+        
+}
+        <ui:composition template="./parentTemplate.xhtml">
+
+            <ui:define name="content">
+                        <f:metadata>
+                            <f:event type="preRenderView" listener="#{catItemBean.onPageLoad}"/>
+                        </f:metadata>
+                
+                <p:ajaxStatus  onstart="$('#processing').modal('open');" onsuccess="$('#processing').modal('close');" />
+
+                 <style>
+            .hide-label{ display:none;}
+        </style>
+
+                <h:form id="searchForm">
+                    <h:panelGroup id="panelSearch">
+                        <p:focus context="panelSearch" />
+                    <div class="row" style="margin-bottom: 0px;" >
+                        <div class="col s12">
+                            <div class="card" style="margin-bottom: 0px;" >
+                                <div class="card-content">
+                                    <h5><i class="fas fa-book-open"/> Artículos</h5>
+
+                                    <div class="row">
+                                          <div class="col s12 m6 l6 offset-l3 offset-m3 input-field">
+                                            <h6>Buscar por:</h6>
+                                            <h:selectOneMenu id="reportId" value="#{catItemBean.filterValue}">    
+                                                <f:selectItem itemLabel="Todo" itemValue="0"/>  
+                                                <f:selectItem itemLabel="Descripción" itemValue="1"/>
+                                                <f:selectItem itemLabel="Código" itemValue="2"/>
+                                                <f:selectItem itemLabel="Departamento" itemValue="4"/>
+                                                <f:selectItem itemLabel="Proveedor" itemValue="5"/>
+                                                <f:selectItem itemLabel="Marca" itemValue="6"/>
+                                                <f:selectItem itemLabel="Ubicación" itemValue="7"/>
+                                                <p:ajax update="@form"
+                                                        event="change" listener="#{catItemBean.setLabels}"
+                                                        oncomplete="updateInputs(); initDatepicker(); initSelect();"/>  
+                                            </h:selectOneMenu>  
+                                             <label  for="reportId" ></label>
+           
+                                        </div>
+                                    </div>
+                                        
+                                    <div class="row">
+                                        <div class="col s12 m6 l6 offset-l3 offset-m3  input-field">
+                                            <p:inputText
+                                                rendered="#{catItemBean.filterValue == '1'}"
+                                                id="filter1"
+                                                required="true"
+                                                converter="EmptyToNullConverter"
+                                                value = "#{catItemBean.itemExt.itemEntity.descItem}"
+                                                requiredMessage="#{bundle.validationmessagereguired}">
+                                                
+                                            </p:inputText>
+                                            <h:messages class="red-text" for="filter1"/>
+                                            <label class="#{catItemBean.hideDesc}" for="filter1" >Ingresar descripción</label> 
+
+                                         
+
+                                            
+                                            <p:inputText
+
+                                                id="filter2"
+                                                rendered="#{catItemBean.filterValue == '2'}"
+                                                required="true"
+                                                value="#{catItemBean.itemExt.itemEntity.standardCodeItem}"
+                                                requiredMessage="#{bundle.validationmessagereguired}"
+                                                converterMessage="#{bundle.validationmessagenumeric}"/>
+                                            <h:messages class="red-text" for="filter2"/>
+                                            <label class="#{catItemBean.hideCode}" for="filter2" >Ingresar Código</label> 
+                                        
+                                            
+                                            <h:selectOneMenu id="filter4" value="#{catItemBean.itemExt.itemEntity.idDepartment.idDepartment}"
+                                                             rendered="#{catItemBean.filterValue == '4'}"
+                                                             required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar departamento" itemValue="" />
+                                              <f:selectItems  value="#{catItemBean.depDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idDepartment}"/>
+                                        </h:selectOneMenu>
+                                            <h:messages class="red-text" for="filter4"/>
+                                            
+                                            
+                                            <h:selectOneMenu id="provider" value="#{catItemBean.itemExt.itemEntity.idProvider.idProvider}"
+                                                             rendered="#{catItemBean.filterValue == '5'}"
+                                                             required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar proveedor" itemValue="" />
+                                                <f:selectItems  value="#{catItemBean.provDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idProvider}"/>
+                                        </h:selectOneMenu>
+                                            <h:messages class="red-text" for="provider"/>
+                                            
+                                            <h:selectOneMenu id="brand" value="#{catItemBean.itemExt.itemEntity.idBrand.idBrand}"
+                                                             rendered="#{catItemBean.filterValue == '6'}"
+                                                             required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar marca" itemValue="" />
+                                                <f:selectItems  value="#{catItemBean.brandDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idBrand}"/>
+                                        </h:selectOneMenu>
+                                            <h:messages class="red-text" for="brand"/>
+                                            
+                                            <h:selectOneMenu id="location" value="#{catItemBean.itemExt.itemEntity.idLocation.idLocation}"
+                                                             rendered="#{catItemBean.filterValue == '7'}"
+                                                             required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar ubicación" itemValue="" />
+                                                <f:selectItems  value="#{catItemBean.locationDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idLocation}"/>
+                                        </h:selectOneMenu>
+                                            <h:messages class="red-text" for="location"/>
+                                           
+                                        </div>
+                                          
+                                        </div>
+                                   
+                                    <div class="row">
+                                        <div class="col s12 m4 l4 offset-l4 offset-m4 " >                        
+                                            <p:commandLink action="#{catItemBean.populateTable}"
+                                                           styleClass="btn waves-effect waves-light"
+                                                           style="width: 100%;text-decoration: none;
+                                                                  color: white;"
+                                                           update="tableForm @form"
+
+                                                           oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                                           >
+
+                                                <i class="icofont-search"></i> #{bundle['search.btn.search']}
+                                            </p:commandLink> 
+                                        </div>
+
+
+
+                                    </div>
+                                    
+                                  
+                                      
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                 </h:panelGroup>
+                </h:form>
+
+
+                <h:form id="tableForm">
+                    <div class="row" style="margin-bottom: 0px;">
+                        <div class="col s12">
+                            <div class="card">
+                                <div class="card-content">
+                                    
+                                      
+                                    <div class="col s3 offset-m9 offset-l10 offset-s09" style="margin-bottom: 5px">
+                                        <h:commandLink styleClass=""
+                                                       style="padding-right: 10px;
+                                               padding-bottom: 13px;">
+                                            <p:dataExporter type="xls" target="resultTable" fileName="reporte artículos" pageOnly="false"/>
+                                            <i class="fas fa-file-download fa-2x light-blue-text text-darken-4">
+                                            </i>
+                                        </h:commandLink>
+                                          
+                                          
+                                           <p:commandLink styleClass="btn-floatingwaves-effect waves-light
+                                                          light-blue-text text-darken-4
+                                                          hide-on-small-and-down     "
+                                       style=" text-decoration: none;
+                                               color: white;"
+                                               action="#{catItemBean.addNew}" 
+                                       update="modalForm"
+                                       oncomplete="updateInputs(); $('#CRUDModal').modal('open'); initSelect();">
+                            <i class="fa fa-plus fa-2x"></i>
+                            <p:resetInput target="modalForm" />
+                        </p:commandLink>
+                                      </div>
+
+
+                                    <div class="row" style="margin-bottom: 8px">
+                                        <div class="col s12">
+                                          <p:dataTable id="resultTable" 
+
+
+                                                       value="#{catItemBean.objLazyList}"
+                                                         var="row"
+                                                         emptyMessage="#{bundle['resulttable.nomatchfound']}"
+                                                         tableStyle="table-layout:auto;"
+                                                         reflow="true"
+                                                         paginator="true" rows="20"
+                                                         lazy="true"
+                                                         
+                                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                                         rowsPerPageTemplate="20,50,100,{ShowAll|'Todos'}"
+                                                         paginatorTemplate="{CurrentPageReport}
+                                                         {FirstPageLink}
+                                                         {PreviousPageLink}
+                                                         {PageLinks}
+                                                         {NextPageLink}
+                                                         {LastPageLink}
+                                                         {RowsPerPageDropdown}">       
+                                                      
+
+                                                <p:column exportable="false"  > 
+                                                    <f:facet name="header">#{bundle['resulttable.actioncolumn']}</f:facet>
+                                                    <div class="row" >
+                                                        <div class="col s3 l6 m6">
+                                                            <p:commandLink styleClass="
+                                                                           waves-effect"
+                                                                           style="text-decoration: none;"
+                                                                           oncomplete="updateInputs(); initDatepicker(); $('#CRUDModal').modal('open'); initSelect();"
+                                                                           update="modalForm"><i class="fas fa-pencil-alt fa-2x light-blue-text text-darken-4"></i>
+                                                                <f:setPropertyActionListener value="#{row}" target="#{catItemBean.selectedItem}" />
+                                                                <p:resetInput target="modalForm"/>
+                                                            </p:commandLink>
+                                                        </div>
+                                                       
+
+                                                    </div> 
+                                                </p:column>
+                                                
+                                                <p:column headerText="#{bundle['item.columnname.stancode']}">      
+                                                    <h:outputText value="#{row.standardCodeItem}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="#{bundle['item.columnname.descitem']}">                                                   
+                                                    <h:outputText value="#{row.descItem}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="#{bundle['uom.columnname.shortname']}">
+                                                    <h:outputText value="#{row.idUom.shortName}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Departamento">                                                  
+                                                    <h:outputText value="#{row.idDepartment.descDepartment}" />
+                                                </p:column>
+                                              
+                                                <p:column headerText="Marca">                                                  
+                                                    <h:outputText value="#{row.idBrand.nameBrand}" />
+                                                </p:column>
+                                              
+                                                <p:column headerText="Proveedor">                                                  
+                                                    <h:outputText value="#{row.idProvider.nameProvider}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Proveedor 2">                                                  
+                                                    <h:outputText value="#{row.idProvider2.nameProvider}" />
+                                                </p:column>
+                                              
+                                                <p:column headerText="Proveedor 3">                                                  
+                                                    <h:outputText value="#{row.idProvider3.nameProvider}" />
+                                                </p:column>
+                                                <p:column headerText="Precio venta">                                                 
+                                                    <h:outputText value="#{row.priceSale}" />
+                                                </p:column>
+                                                <p:column headerText="Precio proveedor">                                                 
+                                                    <h:outputText value="#{row.priceProvider}" />
+                                                </p:column>
+                                                <p:column headerText="Precio proveedor 2">                                                 
+                                                    <h:outputText value="#{row.priceProvider2}" />
+                                                </p:column>
+                                                <p:column headerText="Precio proveedor 3">                                                 
+                                                    <h:outputText value="#{row.priceProvider3}" />
+                                                </p:column>
+                                                <p:column headerText="Código proveedor">                                                 
+                                                    <h:outputText value="#{row.codeProvider}" />
+                                                </p:column>
+                                                <p:column headerText="Precio proveedor 2">                                                 
+                                                    <h:outputText value="#{row.codeProvider2}" />
+                                                </p:column>
+                                                <p:column headerText="Código proveedor 3">                                                 
+                                                    <h:outputText value="#{row.codeProvider3}" />
+                                                </p:column>
+                                              
+                                                <p:column headerText="#{bundle['item.columnname.wholesale']}">                                                    
+                                                    <h:outputText value="#{row.wholesalePrice}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Existencia">                                                    
+                                                    <h:outputText value="#{row.itemStock}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Inventario mínimo">                                                    
+                                                    <h:outputText value="#{row.minStockAllowed}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Ubicación">                                                    
+                                                    <h:outputText value="#{row.idLocation.nameLocation}" />
+                                                </p:column>
+                                                
+                                                 <p:column headerText="Venta Fracción" style="display: none">                                                    
+                                                     <h:outputText  value="#{row.saleByFraction}" />
+                                                    </p:column> 
+                                                
+                                                <p:column headerText="Venta Fracción" exportable="false" >                                                    
+                                                        <p:selectBooleanCheckbox disabled="true" value="#{row.saleByFraction}"></p:selectBooleanCheckbox>
+                                                         <span class="lever"></span>
+                                                        
+                                                </p:column>
+                                                
+                                                
+                                                <p:column headerText="#{bundle['item.columnname.currencyisocode']}">                                                   
+                                                    <h:outputText value="#{row.idCurrency.isoCodeCurrency}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="#{bundle['item.columnname.minquantity']}">                                                    
+                                                    <h:outputText value="#{row.minQuantity}" />
+                                                </p:column>
+                                                 <p:column headerText="Modificado por">                                                   
+                                                    <h:outputText value="#{row.modifiedBy}" />
+                                                </p:column>
+                                                
+                                                <p:column headerText="Fecha modificación">                                                    
+                                                    <h:outputText value="#{row.lastModDate}" />
+                                                </p:column>                  
+                                            </p:dataTable>
+                                        </div>
+                                    </div>
+                                   
+
+
+                                            <!--boton flotante añadir nuevo-->
+                                                            <div class="row">
+                                                                <div class="fixed-action-btn" style="bottom: 11%">
+                                                                    <p:commandLink styleClass="btn-floating
+                                                                                   btn-large
+                                                                                   waves-effect waves-light
+                                                                                   hide-on-med-and-up "
+                                                                                   style=" text-decoration: none; color: white;"
+                                                                                   action="#{catItemBean.addNew}" 
+                                                                                   update="modalForm"
+                                                                                   oncomplete="updateInputs(); $('#CRUDModal').modal('open'); initSelect();">
+                                                                        <i class="fa fa-plus"></i>
+                                                                         <p:resetInput target="modalForm" />
+                                                                    </p:commandLink>
+
+
+                                                                </div>
+                                                            </div>
+                                        <div class="row">
+                                        <div class="col s3 offset-m9 offset-l10 offset-s09" style="margin-bottom: 5px; ">
+                                        <h:commandLink styleClass=""
+                                                       style="padding-right: 10px;
+                                               padding-bottom: 13px;
+                                               padding-left: 10px">
+                                            <p:dataExporter type="xls" target="resultTable" fileName="reporte artículos" pageOnly="false"/>
+                                            <i class="fas fa-file-download fa-2x light-blue-text text-darken-4">
+                                            </i>
+                                        </h:commandLink>
+                                          
+                                          
+                                           <p:commandLink styleClass="btn-floatingwaves-effect waves-light
+                                                          light-blue-text text-darken-4
+                                                          hide-on-small-and-down     "
+                                       style=" text-decoration: none;
+                                               color: white;"
+                                               action="#{catItemBean.addNew}" 
+                                       update="modalForm"
+                                       oncomplete="updateInputs(); $('#CRUDModal').modal('open'); initSelect();">
+                            <i class="fa fa-plus fa-2x"></i>
+                            <p:resetInput target="modalForm" />
+                        </p:commandLink>
+                                      </div>
+                                        </div>
+                                    
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>    
+
+
+
+
+
+
+
+                </h:form>
+                
+                <div id="CRUDModal" class="modal modal-fixed-footer" >
+                    <h:form id="modalForm">
+                        <h:panelGroup id="panelNewUpdate">
+                            <p:focus context="panelNewUpdate"/>
+                        <div class="modal-content">
+                            <h4>#{bundle['modal.crud.tittle']}</h4>
+
+                            <div class="row">
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field1"
+                                        value = "#{catItemBean.selectedItem.descItem}"
+                                        required="true"
+                                        validatorMessage="Máximo 80 caracteres"
+                                        requiredMessage="#{bundle.validationmessagereguired}">
+                                        <f:validateLength maximum="80" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field1"/>
+                                    <label for="field1">#{bundle['item.columnname.descitem']}</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field2"
+                                        value = "#{catItemBean.selectedItem.shortDescItem}"
+                                        required="true"
+                                        validatorMessage="Máximo 30 caracteres"
+                                        requiredMessage="#{bundle.validationmessagereguired}">
+                                        <f:validateLength maximum="30" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field2"/>
+                                    <label for="field2">#{bundle['item.columnname.shortdesc']}</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field3"
+                                        value = "#{catItemBean.selectedItem.standardCodeItem}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        validatorMessage="Mínimo 1, Máximo 16">
+                                         <f:validateLength minimum = "1" maximum = "16" />
+
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field3"/>
+                                    <label for="field3">#{bundle['item.columnname.stdcode']}</label>
+                                </div>
+                                
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field4"
+                                        value = "#{catItemBean.selectedItem.minQuantity}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="Mayor a cero y máx 8 dígitos">
+                                        <f:validateLongRange minimum="1" />
+                                        <f:validateLength maximum="8" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field4"/>
+                                    <label for="field4">#{bundle['item.columnname.minquantity']}</label>
+                                </div>
+                                
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field5"
+                                        value = "#{catItemBean.selectedItem.priceSale}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"       
+                                        validatorMessage="Mayor a cero y máx 8 dígitos">
+                                        <f:validateLongRange minimum="0" />
+                                        <f:validateLength maximum="8" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field5"/>
+                                    <label for="field5">#{bundle['item.columnname.pricesale']}</label>
+                                </div>
+                                
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="priceProvider"
+                                        value = "#{catItemBean.selectedItem.priceProvider}"
+                                        required="false"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"       
+                                        validatorMessage="Mayor a cero y máx 8 dígitos">
+                                        <f:validateLongRange minimum="0" />
+                                        <f:validateLength maximum="8" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="priceProvider"/>
+                                    <label for="priceProvider">Precio proveedor</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="priceProvider2"
+                                        value = "#{catItemBean.selectedItem.priceProvider2}"
+                                        required="false"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"       
+                                        validatorMessage="Mayor a cero y máx 8 dígitos">
+                                        <f:validateLongRange minimum="0" />
+                                        <f:validateLength maximum="8" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="priceProvider2"/>
+                                    <label for="priceProvider2">Precio proveedor 2</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="priceProvider3"
+                                        value = "#{catItemBean.selectedItem.priceProvider3}"
+                                        required="false"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"       
+                                        validatorMessage="Mayor a cero y máx 8 dígitos">
+                                        <f:validateLongRange minimum="0" />
+                                        <f:validateLength maximum="8" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="priceProvider3"/>
+                                    <label for="priceProvider3">Precio proveedor 3</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="codeProvider"
+                                        value = "#{catItemBean.selectedItem.codeProvider}"
+                                        required="false"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        validatorMessage="Mínimo 1, Máximo 16">
+                                         <f:validateLength minimum = "1" maximum = "16" />
+
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="codeProvider"/>
+                                    <label for="codeProvider">Código proveedor</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="codeProvider2"
+                                        value = "#{catItemBean.selectedItem.codeProvider2}"
+                                        required="false"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        validatorMessage="Mínimo 1, Máximo 16">
+                                         <f:validateLength minimum = "1" maximum = "16" />
+
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="codeProvider2"/>
+                                    <label for="codeProvider2">Código proveedor2</label>
+                                </div>
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="codeProvider3"
+                                        value = "#{catItemBean.selectedItem.codeProvider3}"
+                                        required="false"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        validatorMessage="Mínimo 1, Máximo 16">
+                                         <f:validateLength minimum = "1" maximum = "16" />
+
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="codeProvider3"/>
+                                    <label for="codeProvider3">Código proveedor 3</label>
+                                </div>
+                                 <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field6"
+                                        value = "#{catItemBean.selectedItem.wholesalePrice}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="Mayor a cero y máx 8 dígitos">
+                                        <f:validateLongRange minimum="0" />
+                                        <f:validateLength maximum="80" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field6"/>
+                                    <label for="field6">#{bundle['item.columnname.wholesale']}</label>
+                                </div>
+                                
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="field7"
+                                        value = "#{catItemBean.selectedItem.itemStock}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="Mayor a cero y max 8 dígitos">
+                                        <f:validateLongRange minimum="1" />
+                                        <f:validateLength maximum="8" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="field7"/>
+                                    <label for="field7">Existencia</label>
+                                </div>
+                                
+                                <div class=" col s12 l6 m6 input-field">
+                                    <h:inputText                                                 
+                                        id="minStock"
+                                        value = "#{catItemBean.selectedItem.minStockAllowed}"
+                                        required="true"
+                                        requiredMessage="#{bundle.validationmessagereguired}"
+                                        converterMessage="#{bundle.validationmessagenumeric}"
+                                        validatorMessage="Mayor a cero y max 8 dígitos">
+                                        <f:validateLongRange minimum="1" />
+                                        <f:validateLength maximum="8" />
+                                    </h:inputText>
+                                    <h:messages class="red-text" for="minStock"/>
+                                    <label for="minStock">Inventario mínimo</label>
+                                </div>
+                                
+                                
+                                
+                                <div class=" col s12 l6 m6 ">
+                                 <label  for="filter12" >Venta por Fracción</label> 
+                                    <div class="switch">
+                                <label>
+                                  No
+                                  <h:selectBooleanCheckbox value="#{catItemBean.selectedItem.saleByFraction}"></h:selectBooleanCheckbox>
+                                  <span class="lever"></span>
+                                  Si
+                                </label>
+                                    </div>    
+                                        
+                              </div>
+                                
+                                
+                                
+                                 </div>
+                            <div class="row">
+                                <div class="col s12 input-field">
+                                    <h:panelGroup id="pgDepartment">   
+                                        <p:tooltip for="pgDepartment" value="Departamento" position="right"/>
+                                    <h:selectOneMenu id="field9" value="#{catItemBean.selectedItem.idDepartment.idDepartment}"
+                                                     required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}"
+                                                     title="Departamento" >
+                                        <f:selectItem   itemLabel="Seleccionar Departamento" itemValue="" itemDescription="Departamento"  />
+                                        <f:selectItems  value="#{catItemBean.depDropdown.liObject}"
+                                                        var="list" itemLabel="#{list}"
+                                                        itemValue="#{list.idDepartment}"/>
+                                        
+                                        </h:selectOneMenu>
+                                        </h:panelGroup>
+                                             <h:messages class="red-text" for="field9"/>
+                                             
+                                </div>
+                                
+                                <div class="col s12 input-field">
+                                            <h:panelGroup id="pgProvider">   
+                                        <p:tooltip for="pgProvider" value="Proveedor" position="right"/>
+                                    <h:selectOneMenu id="fieldProvider" value="#{catItemBean.selectedItem.idProvider.idProvider}"
+                                                     required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}"  >
+                                        <f:selectItem   itemLabel="Seleccionar Proveedor" itemValue=""/>
+                                        <f:selectItems  value="#{catItemBean.provDropdown.liObject}"
+                                                        var="list" itemLabel="#{list}"
+                                                        itemValue="#{list.idProvider}"/>
+                                        <p:tooltip for="fieldProvider" value="Proveedor" position="top"/>
+                                        </h:selectOneMenu>
+                                            </h:panelGroup>
+                                             <h:messages class="red-text" for="fieldProvider"/>
+                                             
+                                </div>
+                                
+                                <div class="col s12 input-field">
+                                            <h:panelGroup id="pgProvider2">   
+                                        <p:tooltip for="pgProvider2" value="Proveedor 2" position="right"/>
+                                    <h:selectOneMenu id="fieldProvider2" value="#{catItemBean.selectedItem.idProvider2.idProvider}"
+                                                     required="false"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}"  >
+                                        <f:selectItem   itemLabel="Seleccionar Proveedor 2" itemValue=""/>
+                                        <f:selectItems  value="#{catItemBean.provDropdown.liObject}"
+                                                        var="list" itemLabel="#{list}"
+                                                        itemValue="#{list.idProvider}"/>
+                                        <p:tooltip for="fieldProvider2" value="Proveedor 2" position="top"/>
+                                        </h:selectOneMenu>
+                                            </h:panelGroup>
+                                             <h:messages class="red-text" for="fieldProvider2"/>
+                                             
+                                </div>
+                                
+                                <div class="col s12 input-field">
+                                            <h:panelGroup id="pgProvider3">   
+                                        <p:tooltip for="pgProvider3" value="Proveedor 3" position="right"/>
+                                    <h:selectOneMenu id="fieldProvider3" value="#{catItemBean.selectedItem.idProvider3.idProvider}"
+                                                     required="false"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}"  >
+                                        <f:selectItem   itemLabel="Seleccionar Proveedor 3" itemValue=""/>
+                                        <f:selectItems  value="#{catItemBean.provDropdown.liObject}"
+                                                        var="list" itemLabel="#{list}"
+                                                        itemValue="#{list.idProvider}"/>
+                                        <p:tooltip for="fieldProvider3" value="Proveedor 3" position="top"/>
+                                        </h:selectOneMenu>
+                                            </h:panelGroup>
+                                             <h:messages class="red-text" for="fieldProvider3"/>
+                                             
+                                </div>
+                                
+                                <div class="col s12 input-field">
+                                   <h:panelGroup id="pgBrand">   
+                                        <p:tooltip for="pgBrand" value="Marca" position="right"/>
+                                    <h:selectOneMenu id="fieldBrand" value="#{catItemBean.selectedItem.idBrand.idBrand}"
+                                                     required="true"
+                                                     requiredMessage="#{bundle.validationmessagereguired}"
+                                                     converterMessage="#{bundle.validationmessagenumeric}"  >
+                                        <f:selectItem   itemLabel="Seleccionar Marca" itemValue="" />
+                                        <f:selectItems  value="#{catItemBean.brandDropdown.liObject}"
+                                                        var="list" itemLabel="#{list}"
+                                                        itemValue="#{list.idBrand}"/>
+                                        <p:tooltip for="fieldBrand" value="Marca" position="top"/>
+                                        </h:selectOneMenu>
+                                   </h:panelGroup>
+                                    
+                                             <h:messages class="red-text" for="fieldBrand"/>
+                                             
+                                </div>
+                                        
+                                        <div class="col s12 input-field">
+                                          <h:panelGroup id="pgUOM">   
+                                            <p:tooltip for="pgUOM" value="Unidad de medida" position="right"/>
+                                            <h:selectOneMenu id="field10" value="#{catItemBean.selectedItem.idUom.idUom}"
+                                                             required="true"
+                                                             requiredMessage="#{bundle.validationmessagereguired}"
+                                                             converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar Unidad de medida" itemValue="" />
+                                                <f:selectItems  value="#{catItemBean.uomDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idUom}"/>
+                                                <p:tooltip for="field10" value="Unidad de medida" position="top"/>
+                                        </h:selectOneMenu>
+                                          </h:panelGroup>
+                                            <h:messages class="red-text" for="field10"/>
+                                             
+                                        </div>
+                                
+                                         <div class="col s12 input-field">
+                                            <h:panelGroup id="pgLocation">   
+                                                 <p:tooltip for="pgLocation" value="Ubicación" position="right"/>
+                                             <h:selectOneMenu id="locationDropdown" value="#{catItemBean.selectedItem.idLocation.idLocation}"
+                                                             required="true"
+                                                             requiredMessage="#{bundle.validationmessagereguired}"
+                                                             converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Seleccionar Ubicación" itemValue="" />
+                                                <f:selectItems  value="#{catItemBean.locationDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idLocation}"/>
+                                                <p:tooltip for="locationDropdown" value="Ubicación" position="top"/>
+                                        </h:selectOneMenu>
+                                            </h:panelGroup>
+                                            <h:messages class="red-text" for="locationDropdown"/>
+                                             
+                                        </div>
+                                        
+                                         <div class="col s12 input-field">
+                                            <h:panelGroup id="pgCurrency">   
+                                                 <p:tooltip for="pgCurrency" value="Moneda" position="right"/>
+                                            <h:selectOneMenu id="field11" value="#{catItemBean.selectedItem.idCurrency.idCurrency}"
+                                                             required="true"
+                                                             requiredMessage="#{bundle.validationmessagereguired}"
+                                                             converterMessage="#{bundle.validationmessagenumeric}">
+                                                <f:selectItem itemLabel="Peso MXN" itemValue="2" />
+                                                <f:selectItems  value="#{catItemBean.currencyDropdown.liObject}"
+                                                              var="list" itemLabel="#{list}"
+                                                              itemValue="#{list.idCurrency}"/>
+                                                <p:tooltip for="field11" value="Moneda" position="top"/>
+                                        </h:selectOneMenu>
+                                            </h:panelGroup>
+                                            <h:messages class="red-text" for="field11"/>
+                                            
+                                        </div>
+                                
+                                
+                                
+                                        </div>
+                         
+                        </div>
+                        
+                        <div class="modal-footer ">
+                            <div class="row" style="width: 99%; margin-left: 2px">
+                                <div class="col s6">
+                                    <p:commandLink styleClass="waves-effect waves-light btn"              
+                                                   action ="#{catItemBean.callMerge}"
+                                                   oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                                   style="width:99%; text-decoration: none;
+                                                                  color: white;"
+                                                   update="modalForm searchForm tableForm finishedProcessPanel"
+                                                   >  
+                                        <i class="icofont-save icofont-flip-horizontal"/> Guardar
+                                    </p:commandLink>
+                                </div>
+
+                                <div class="col s6 left-align">
+                                    <p:commandLink
+                                        styleClass="modal-action modal-close
+                                        waves-effect waves-light btn
+                                        "
+                                        style="width:99%; text-decoration: none;
+                                                                  color: white;"
+                                        action="#{catItemBean.addNew}"
+                                        oncomplete="updateInputs(); initDatepicker(); initSelect();"
+                                        update="searchForm"> 
+                                        <i class="icofont-close"/> Cancelar
+                                    </p:commandLink>
+                                </div>     
+                            </div>     
+                        </div>
+                        </h:panelGroup>
+
+                    </h:form>
+                </div>
+
+                
+                <h:panelGroup id="panelWarning">
+                    <p:focus context="panelWarning"/>
+                <div id="warningModal" class="modal">
+                    <div class="modal-content center-align black-text ">
+
+                        <h5>#{bundle['modal.delete.tittle']}</h5>
+                        <h6>#{bundle['modal.delete.question']}</h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row" style="width: 99%; margin-left: 2px">
+
+                            <div class="col s12 m5 l5  offset-l1 offset-m1 center-align">
+                                <h:form  id="warningForm">
+                                    <p:commandLink style="width: 100%; text-decoration: none;
+                                                                  color: white;"
+                                                   action="#{catItemBean.callDelete}"
+                                                   styleClass="btn waves-effect waves-light"
+                                                   onsuccess="$('#warningModal').modal('close'); $('#answerModal').modal('open');"
+                                                   update="tableForm @form finishedProcessPanel"
+
+
+                                                   >
+
+                                        <i class="icofont-check-alt"></i>    Aceptar
+                                    </p:commandLink>
+                                </h:form>
+                            </div>
+                            <div class="col s12 m5 l5 center-align">
+                                <a class="btn waves-effect waves-light modal-action modal-close" style="width: 100%;">
+                                   <i class="icofont-close-line"/>
+                                    Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                    </h:panelGroup>
+
+                <div id="answerModal" class="modal">
+                    <h:panelGroup id="finishedProcessPanel">
+                        <div class="modal-content center-align black-text">
+                            <h5>#{bundle['modal.updtcreate.confirm']}</h5>
+
+                            <h6>#{catItemBean.answerMessage}</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row" style="width: 99%; margin-left: 0px">
+                                <div class="col s12 m6 l6 offset-m3 offset-l3">
+                                    <a class="modal-action modal-close waves-effect waves-light btn" style="width: 100%; text-decoration: none; color:white">
+                                        <i class="icofont-check-alt"></i> Aceptar</a>  
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+                
+                
+                <script>
+     initModal();
+    function initModal(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('.modal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+            
+            
+}
+initProcessing();
+    function initProcessing(){
+            $(document).ready(function () {
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('#processing').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      startingTop: '4%', // Starting top style attribute
+      endingTop: '10%', // Ending top style attribute
+      preventScrolling: true
+          }
+  );
+            });
+           
+        
+            
+}
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
