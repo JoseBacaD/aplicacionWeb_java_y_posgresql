@@ -64,7 +64,7 @@ Contributor(s):
     <!--conexión heroku-->
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.connection.url">jdbc:postgresql://ep-wild-mode-avg9appr-pooler.c-11.us-east-1.aws.neon.tech/POS-JSF?sslmode=require&amp;channel_binding=require</property>
+    <property name="connection.url">jdbc:postgresql://ep-wild-mode-avg9appr-pooler.c-11.us-east-1.aws.neon.tech/POS-JSF?sslmode=require&amp;channel_binding=require&amp;connectTimeout=10&amp;socketTimeout=30&amp;loginTimeout=10</property>
     <property name="hibernate.connection.username">neondb_owner</property>
     <property name="hibernate.connection.password">npg_FzP9GY5MLQNl</property>
     <property name="hibernate.show_sql">true</property>
@@ -73,9 +73,15 @@ Contributor(s):
 
 <!-- descomentar las líneas tres líneas siguientes para instalación local funcional-->
      <property name="hibernate.c3p0.min_size">1</property>
-    <property name="hibernate.c3p0.max_size">50</property>
-    <property name="hibernate.c3p0.timeout">0</property>
+    <property name="hibernate.c3p0.max_size">5</property>
+    <property name="hibernate.c3p0.timeout">300</property>
+     <property name="hibernate.c3p0.max_statements">50</property>
+<property name="hibernate.c3p0.idle_test_period">300</property>
 
+<!-- Aumentar hilos y forzar timeout en conexiones colgadas -->
+<property name="hibernate.c3p0.numHelperThreads">6</property>
+<property name="hibernate.c3p0.checkoutTimeout">10000</property>
+<property name="hibernate.c3p0.unreturnedConnectionTimeout">30</property>
 
      <!--<mapping class="com.dxc.entity.Usrs"/>-->
         <!--<mapping class="com.dxc.entity.State"/>-->  
