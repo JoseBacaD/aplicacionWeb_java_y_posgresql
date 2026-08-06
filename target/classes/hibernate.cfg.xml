@@ -64,7 +64,7 @@ Contributor(s):
     <!--conexión heroku-->
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.connection.url">jdbc:postgresql://ep-wild-mode-avg9appr-pooler.c-11.us-east-1.aws.neon.tech/POS-JSF?sslmode=require&amp;connectTimeout=60&amp;socketTimeout=60&amp;loginTimeout=60</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://ep-wild-mode-avg9appr-pooler.c-11.us-east-1.aws.neon.tech/neondb?sslmode=require&amp;connectTimeout=60&amp;socketTimeout=60&amp;loginTimeout=60</property>
     <property name="hibernate.connection.username">neondb_owner</property>
     <property name="hibernate.connection.password">npg_FzP9GY5MLQNl</property>
     <property name="hibernate.show_sql">true</property>
