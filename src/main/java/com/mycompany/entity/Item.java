@@ -189,17 +189,6 @@ public class Item implements Serializable {
     @Column(name = "price_provider3")
     private BigDecimal priceProvider3;
     
-    @Basic(optional = true)
-    @Column(name = "code_provider")
-    private String codeProvider;
-   
-    @Basic(optional = true)
-    @Column(name = "code_provider2")
-    private String codeProvider2;
-   
-    @Basic(optional = true)
-    @Column(name = "code_provider3")
-    private String codeProvider3;
     
     @Basic(optional = true)
     @Column(name = "count_rows")
@@ -248,9 +237,7 @@ public class Item implements Serializable {
         this.priceProvider = priceProvider;
         this.priceProvider2 = priceProvider2;
         this.priceProvider3 = priceProvider3;
-        this.codeProvider = codeProvider;
-        this.codeProvider2 = codeProvider2;
-        this.codeProvider3 = codeProvider3;
+       
         this.countRows = countRows;
         this.priceWithTax = priceWithTax;
     }
@@ -286,9 +273,7 @@ public class Item implements Serializable {
         this.priceProvider = priceProvider;
         this.priceProvider2 = priceProvider2;
         this.priceProvider3 = priceProvider3;
-        this.codeProvider = codeProvider;
-        this.codeProvider2 = codeProvider2;
-        this.codeProvider3 = codeProvider3;
+        
         this.countRows = countRows;
         this.priceWithTax = priceWithTax;
     }
@@ -592,28 +577,5 @@ public class Item implements Serializable {
         this.priceProvider3 = priceProvider3;
     }
 
-    public String getCodeProvider() {
-        return codeProvider;
-    }
-
-    public void setCodeProvider(String codeProvider) {
-        this.codeProvider = codeProvider;
-    }
-
-    public String getCodeProvider2() {
-        return codeProvider2;
-    }
-
-    public void setCodeProvider2(String codeProvider2) {
-        this.codeProvider2 = codeProvider2;
-    }
-
-    public String getCodeProvider3() {
-        return codeProvider3;
-    }
-
-    public void setCodeProvider3(String codeProvider3) {
-        this.codeProvider3 = codeProvider3;
-    }
-
+    
 }
