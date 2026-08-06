@@ -72,7 +72,14 @@ Contributor(s):
     <property name="hibernate.hbm2ddl.auto">update</property>
 
 	<property name="hibernate.c3p0.checkoutTimeout">90000</property>
+	<property name="hibernate.c3p0.acquireRetryAttempts">10</property>
+<property name="hibernate.c3p0.acquireRetryDelay">3000</property>
 	
+	<property name="hibernate.c3p0.idle_test_period">300</property>
+<property name="hibernate.c3p0.max_idle_time">600</property>
+<property name="hibernate.c3p0.testConnectionOnCheckout">false</property>
+<property name="hibernate.c3p0.preferredTestQuery">SELECT 1</property>
+
 <!-- descomentar las líneas tres líneas siguientes para instalación local funcional-->
      <property name="hibernate.c3p0.min_size">1</property>
     <property name="hibernate.c3p0.max_size">5</property>
