@@ -1,6 +1,10 @@
 # 1. Compilación
 FROM maven:3.9-eclipse-temurin-11 AS build
 WORKDIR /app
+
+# Limitar estrictamente la memoria que usa Maven para compilar
+ENV MAVEN_OPTS="-Xms64m -Xmx256m"
+
 COPY . .
 RUN mvn clean package -DskipTests -U
 
@@ -13,8 +17,7 @@ COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 # Desactivar puerto de shutdown
 RUN sed -i 's/port="8005" shutdown="SHUTDOWN"/port="-1" shutdown="SHUTDOWN"/g' /usr/local/tomcat/conf/server.xml
 
-# Ajuste estricto de memoria para el plan de 512MB de Render
-# Heap máximo: 256m | Metaspace máximo: 128m | GC Ligero: SerialGC
+# Limitar estrictamente la memoria que usa Tomcat/Java al ejecutarse
 ENV JAVA_OPTS="-Xms64m -Xmx256m -XX:MaxMetaspaceSize=128m -XX:ReservedCodeCacheSize=64m -XX:+UseSerialGC -Djava.security.egd=file:/dev/./urandom -Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar"
 ENV PORT=8080
 EXPOSE 8080
