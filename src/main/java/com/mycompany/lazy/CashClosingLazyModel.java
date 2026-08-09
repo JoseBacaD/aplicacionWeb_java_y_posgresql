@@ -56,16 +56,29 @@ public class CashClosingLazyModel  extends LazyDataModel<CashClosing>{
    
 
     @Override
-    public CashClosing getRowData(String rowKey) {
-        for (CashClosing cashClosing : (List<CashClosing>)(Object)liObject ) {
-            if (cashClosing.getIdCashClosing() == Integer.parseInt(rowKey)) {
-                return cashClosing;
-            }
-        }
-
+public CashClosing getRowData(String rowKey) {
+    // Validar si rowKey es nulo, vacío o contiene la palabra "null"
+    if (rowKey == null || rowKey.trim().isEmpty() || "null".equalsIgnoreCase(rowKey)) {
         return null;
     }
-    
+
+    try {
+        int id = Integer.parseInt(rowKey);
+        
+        if (liObject != null) {
+            for (CashClosing cashClosing : (List<CashClosing>)(Object) liObject) {
+                if (cashClosing.getIdCashClosing() != null && cashClosing.getIdCashClosing() == id) {
+                    return cashClosing;
+                }
+            }
+        }
+    } catch (NumberFormatException e) {
+        // Captura cualquier valor que no sea un número entero válido
+        return null;
+    }
+
+    return null;
+}
     
     
     
