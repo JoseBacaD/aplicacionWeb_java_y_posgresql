@@ -64,7 +64,7 @@ Contributor(s):
     <!--conexión heroku-->
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL82Dialect</property>
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.connection.url">jdbc:postgresql://ep-wild-mode-avg9appr-pooler.c-11.us-east-1.aws.neon.tech/neondb?sslmode=require&amp;connectTimeout=60&amp;socketTimeout=60&amp;loginTimeout=60</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://ep-wild-mode-avg9appr-pooler.c-11.us-east-1.aws.neon.tech/neondb?sslmode=require&amp;connectTimeout=60&amp;socketTimeout=60&amp;loginTimeout=60&amp;options=-c%20timezone=Etc/GMT%2B4</property>
     <property name="hibernate.connection.username">neondb_owner</property>
     <property name="hibernate.connection.password">npg_FzP9GY5MLQNl</property>
     <property name="hibernate.show_sql">true</property>
@@ -79,6 +79,7 @@ Contributor(s):
 <property name="hibernate.c3p0.max_idle_time">600</property>
 <property name="hibernate.c3p0.testConnectionOnCheckout">false</property>
 <property name="hibernate.c3p0.preferredTestQuery">SELECT 1</property>
+<property name="hibernate.jdbc.time_zone">Etc/GMT+4</property>
 
 <!-- descomentar las líneas tres líneas siguientes para instalación local funcional-->
      <property name="hibernate.c3p0.min_size">1</property>
