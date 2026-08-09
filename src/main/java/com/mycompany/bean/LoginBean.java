@@ -89,21 +89,20 @@ public class LoginBean extends AbstractProcessBean implements Serializable {
         this.appConfig = appConfig;
     }
 
-  public void logof() {
+ public void logof() {
     try {
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
 
-        // 1. Invalidar la sesión actual en Tomcat / Servidor
+        // 1. Invalidar la sesión actual
         ec.invalidateSession();
 
-        // 2. Redirigir al login usando la ruta absoluta de la app
-        ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
+        // 2. Redirigir a la vista de login con su ruta completa
+        ec.redirect(ec.getRequestContextPath() + "/faces/views/login.xhtml");
     } catch (Exception e) {
         e.printStackTrace();
     }
 }
-
     public List<MenuOptionPermission> getLiTransactions() {
         return liTransactions;
     }
