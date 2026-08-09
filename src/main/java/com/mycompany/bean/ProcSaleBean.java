@@ -106,8 +106,8 @@ public class ProcSaleBean extends AbstractProcessBean implements Serializable{
         quickItemSearch = new Item();
         wrapper = new ProcSaleWrapper();
         dateFormat = new SimpleDateFormat("yy/MM/dd");
-        today  = Calendar.getInstance().getTime();
-        strDateToday = new SimpleDateFormat("dd-MMMMM-yyyy").format(today);
+       // today  = Calendar.getInstance().getTime();
+        //strDateToday = new SimpleDateFormat("dd-MMMMM-yyyy").format(today);
         FacesContext fc = FacesContext.getCurrentInstance();
         loggedUsr = (LoginBean) fc.getExternalContext().getSessionMap().get("loginSession");
         liOrders = new ArrayList();
@@ -401,6 +401,8 @@ public class ProcSaleBean extends AbstractProcessBean implements Serializable{
     }
     
     private void prepareADetail(Item item){
+        today  = Calendar.getInstance().getTime();
+        strDateToday = new SimpleDateFormat("dd-MMMMM-yyyy HH:mm").format(today);
         detailPrice = detailPrice.setScale(2,RoundingMode.HALF_UP);
         saleDetail = new SaleDetail();
         saleDetail.setFolio(wrapper.getSaleHeader().getSaleHeadEntity());
