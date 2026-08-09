@@ -15,6 +15,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.PrimeFaces;
 
@@ -88,15 +89,20 @@ public class LoginBean extends AbstractProcessBean implements Serializable {
         this.appConfig = appConfig;
     }
 
-  public void logof(){
-        usr = new UserApp();
+  public void logof() {
+    try {
         FacesContext fc = FacesContext.getCurrentInstance();
-        try{
-         fc.getExternalContext().redirect("login.xhtml");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        ExternalContext ec = fc.getExternalContext();
+
+        // 1. Invalidar la sesión actual en Tomcat / Servidor
+        ec.invalidateSession();
+
+        // 2. Redirigir al login usando la ruta absoluta de la app
+        ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
 
     public List<MenuOptionPermission> getLiTransactions() {
         return liTransactions;
